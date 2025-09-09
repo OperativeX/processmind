@@ -3,8 +3,8 @@
 # Backend build stage
 FROM node:18-alpine AS backend-build
 WORKDIR /app/backend
-COPY backend/package*.json ./
-RUN npm ci --only=production
+COPY backend/package.json ./
+RUN npm install --production
 
 # Frontend build stage
 FROM node:18-alpine AS frontend-build
