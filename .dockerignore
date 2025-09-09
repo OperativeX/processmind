@@ -1,64 +1,72 @@
-# Git files
+# Git
 .git
 .gitignore
 
-# Environment files
+# Environment files (keep .env.example for reference)
 .env
 .env.*
 !.env.example
+!.env.coolify.example
 
-# Node modules
+# Dependencies - will be installed fresh
 node_modules/
 */node_modules/
 
-# Build directories
+# Build artifacts - will be built in container
 frontend/build/
 frontend/dist/
 
-# Log files
+# Logs
 *.log
 logs/
 */logs/
 
-# Test files
+# Development files
+dev-tools/
 test/
 tests/
 *.test.js
 *.spec.js
-dev-tools/
+*.test.ts
+*.spec.ts
 
-# Documentation
-*.md
+# Documentation (keep essential ones)
+README.md
+CLAUDE.md
 docs/
 
-# IDE files
+# IDE
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# OS files
+# OS
 .DS_Store
 Thumbs.db
 
 # Temporary files
 temp/
 tmp/
-uploads/temp/
-uploads/processed/
+.cache/
 
-# Docker files
+# Large test files
+test-videos/
+test_audio.wav
+*.mp4
+*.mov
+*.avi
+
+# Docker files (except the one we need)
 docker-compose*.yml
-Dockerfile*
-.dockerignore
+Dockerfile
+Dockerfile.simple
+backend/Dockerfile
+frontend/Dockerfile
+!Dockerfile.coolify
 
-# PM2 files
+# PM2
 ecosystem.config.js
 
-# Other
-*.odt
-*.rtf
-test.mp4
-test_audio.wav
-test-videos/
-test-results/
+# Uploads (will be created fresh)
+uploads/

@@ -1,0 +1,157 @@
+# ProcessLink Dockerfile für Coolify - All-in-One Container
+# Robuste Version mit Backend, Redis, FFmpeg und Frontend
+FROM node:18-alpine
+
+# Install runtime dependencies
+RUN apk add --no-cache \
+    ffmpeg \
+    python3 \
+    make \
+    g++ \
+    curl \
+    bash \
+    redis \
+    supervisor \
+    nginx \
+    && rm -rf /var/cache/apk/*
+
+WORKDIR /app
+
+# Copy everything
+COPY . .
+
+# Install and build backend with production dependencies
+WORKDIR /app/backend
+RUN npm ci --only=production || npm install --production
+
+# Install and build frontend
+WORKDIR /app/frontend
+RUN npm ci && npm run build
+
+# Setup for production
+WORKDIR /app
+
+# Create necessary directories
+RUN mkdir -p /etc/redis /etc/nginx /var/log/supervisor /app/uploads/temp /app/uploads/processed \
+    && chmod -R 755 /app/uploads
+
+# Simple Redis configuration
+RUN echo "bind 127.0.0.1" > /etc/redis/redis.conf && \
+    echo "protected-mode no" >> /etc/redis/redis.conf && \
+    echo "save \"\"" >> /etc/redis/redis.conf && \
+    echo "appendonly no" >> /etc/redis/redis.conf
+
+# Nginx configuration
+COPY frontend/nginx-docker.conf /etc/nginx/nginx.conf
+
+# Create simplified supervisord configuration
+RUN cat > /etc/supervisord.conf << 'EOF'
+[supervisord]
+nodaemon=true
+logfile=/dev/stdout
+logfile_maxbytes=0
+loglevel=info
+pidfile=/tmp/supervisord.pid
+
+[program:redis]
+command=redis-server /etc/redis/redis.conf
+autostart=true
+autorestart=true
+stdout_logfile=/dev/stdout
+stdout_logfile_maxbytes=0
+stderr_logfile=/dev/stderr
+stderr_logfile_maxbytes=0
+priority=10
+
+[program:backend]
+command=/app/start-coolify.sh
+directory=/app/backend
+autostart=true
+autorestart=true
+startretries=10
+startsecs=10
+stopwaitsecs=30
+stdout_logfile=/dev/stdout
+stdout_logfile_maxbytes=0
+stderr_logfile=/dev/stderr
+stderr_logfile_maxbytes=0
+priority=30
+environment=NODE_ENV="production",PORT="5000",REDIS_URL="redis://127.0.0.1:6379"
+
+[program:nginx]
+command=nginx -g 'daemon off;'
+autostart=true
+autorestart=true
+stdout_logfile=/dev/stdout
+stdout_logfile_maxbytes=0
+stderr_logfile=/dev/stderr
+stderr_logfile_maxbytes=0
+priority=20
+startretries=10
+EOF
+
+# Create simplified startup script for Coolify
+RUN cat > /app/start-coolify.sh << 'EOF'
+#!/bin/bash
+set -e
+
+echo "[BACKEND] Starting ProcessLink Backend..."
+echo "[BACKEND] Waiting for Redis..."
+
+# Wait for Redis with timeout
+COUNTER=0
+while ! redis-cli -h 127.0.0.1 ping > /dev/null 2>&1; do
+    COUNTER=$((COUNTER+1))
+    if [ $COUNTER -gt 30 ]; then
+        echo "[BACKEND] ERROR: Redis not responding after 30 seconds"
+        exit 1
+    fi
+    echo "[BACKEND] Waiting for Redis... ($COUNTER/30)"
+    sleep 1
+done
+
+echo "[BACKEND] Redis is ready!"
+
+# Check minimal required environment variables
+if [ -z "$MONGODB_URI" ]; then
+    echo "[BACKEND] ERROR: MONGODB_URI is required!"
+    echo "[BACKEND] Please set it in Coolify environment variables"
+    exit 1
+fi
+
+if [ -z "$JWT_SECRET" ]; then
+    echo "[BACKEND] ERROR: JWT_SECRET is required!"
+    echo "[BACKEND] Please set it in Coolify environment variables"
+    exit 1
+fi
+
+# Start the application
+cd /app/backend
+exec node src/server.js
+EOF
+
+RUN chmod +x /app/start-coolify.sh
+
+# Simple health check script
+RUN cat > /app/healthcheck.sh << 'EOF'
+#!/bin/sh
+# Simple health check - just check if backend responds
+curl -f http://localhost:5000/health > /dev/null 2>&1 || exit 1
+EOF
+
+RUN chmod +x /app/healthcheck.sh
+
+# Expose only frontend port for Coolify
+EXPOSE 5001
+
+# Set default environment variables
+ENV NODE_ENV=production
+ENV PORT=5000
+ENV REDIS_URL=redis://127.0.0.1:6379
+
+# Increased health check intervals for Coolify
+HEALTHCHECK --interval=60s --timeout=30s --start-period=180s --retries=10 \
+    CMD /app/healthcheck.sh
+
+# Start all services
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
