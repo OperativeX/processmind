@@ -34,12 +34,13 @@ RUN mkdir -p /etc/redis && \
     echo "protected-mode no" >> /etc/redis/redis.conf && \
     echo "port 6379" >> /etc/redis/redis.conf
 
-# Create supervisord configuration
+# Create supervisord configuration that uses environment variables
 RUN mkdir -p /etc/supervisor/conf.d && \
     cat > /etc/supervisor/conf.d/supervisord.conf << 'EOF'
 [supervisord]
 nodaemon=true
 logfile=/var/log/supervisord.log
+loglevel=info
 
 [program:redis]
 command=redis-server /etc/redis/redis.conf
@@ -50,14 +51,14 @@ stderr_logfile=/var/log/redis.error.log
 priority=1
 
 [program:backend]
-command=bash -c "cd /app/backend && NODE_ENV=production PORT=5000 REDIS_URL=redis://127.0.0.1:6379 node src/server.js"
+command=/app/start-backend.sh
 autostart=true
 autorestart=true
 startretries=10
 startsecs=10
 stdout_logfile=/var/log/backend.log
 stderr_logfile=/var/log/backend.error.log
-environment=NODE_ENV="production",PORT="5000",REDIS_URL="redis://127.0.0.1:6379"
+redirect_stderr=true
 priority=2
 
 [program:frontend]
@@ -69,7 +70,38 @@ stderr_logfile=/var/log/frontend.error.log
 priority=3
 EOF
 
-# Create startup script for health check
+# Create backend startup script that properly passes environment variables
+RUN cat > /app/start-backend.sh << 'EOF'
+#!/bin/bash
+set -e
+
+echo "Starting backend with environment:"
+echo "NODE_ENV=${NODE_ENV}"
+echo "PORT=${PORT}"
+echo "MONGODB_URI=${MONGODB_URI:0:30}..."
+echo "REDIS_URL=redis://127.0.0.1:6379"
+echo "JWT_SECRET is ${JWT_SECRET:+set}"
+echo "OPENAI_API_KEY is ${OPENAI_API_KEY:+set}"
+
+# Wait for Redis to be ready
+echo "Waiting for Redis..."
+for i in {1..30}; do
+    if redis-cli ping > /dev/null 2>&1; then
+        echo "Redis is ready!"
+        break
+    fi
+    echo "Waiting for Redis... attempt $i/30"
+    sleep 1
+done
+
+# Start backend with all environment variables
+cd /app/backend
+exec node src/server.js
+EOF
+
+RUN chmod +x /app/start-backend.sh
+
+# Create health check script
 RUN cat > /app/health.sh << 'EOF'
 #!/bin/sh
 # Check if Redis is running
@@ -86,8 +118,13 @@ RUN mkdir -p /var/log
 # Expose ports
 EXPOSE 5000 5001
 
+# Set default environment variables that will be overridden by Coolify
+ENV NODE_ENV=production
+ENV PORT=5000
+ENV REDIS_URL=redis://127.0.0.1:6379
+
 # Health check - increased timeout for service startup
-HEALTHCHECK --interval=30s --timeout=10s --start-period=180s --retries=5 \
+HEALTHCHECK --interval=30s --timeout=10s --start-period=300s --retries=5 \
     CMD /app/health.sh
 
 # Start services with supervisor
