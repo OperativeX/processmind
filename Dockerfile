@@ -171,7 +171,8 @@ EOF
 # Create backend startup script with better error handling
 RUN cat > /app/start-backend.sh << 'EOF'
 #!/bin/bash
-set -e
+# Don't use set -e here to capture errors properly
+set +e
 
 echo "[BACKEND] Starting backend service..."
 echo "[BACKEND] Environment check:"
@@ -237,10 +238,17 @@ if [ ! -f "src/server.js" ]; then
 fi
 
 # Run with full error output, capturing stderr
-node src/server.js 2>&1 || {
-    echo "[BACKEND] ERROR: Backend failed to start with exit code $?"
-    exit 1
-}
+echo "[BACKEND] Attempting to start Node.js server..."
+node src/server.js 2>&1 | while IFS= read -r line; do
+    echo "[BACKEND] $line"
+done
+
+# Check exit status
+EXIT_CODE=${PIPESTATUS[0]}
+if [ $EXIT_CODE -ne 0 ]; then
+    echo "[BACKEND] ERROR: Backend failed to start with exit code $EXIT_CODE"
+    exit $EXIT_CODE
+fi
 EOF
 
 RUN chmod +x /app/start-backend.sh
