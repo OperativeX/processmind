@@ -33,7 +33,7 @@ COPY backend/ ./backend/
 
 # Copy frontend build and nginx config
 COPY --from=frontend-build /app/frontend/build ./frontend/build
-COPY frontend/nginx-docker.conf /etc/nginx/nginx.conf
+COPY nginx-docker.conf /etc/nginx/nginx.conf
 
 # Create necessary directories
 RUN mkdir -p /app/backend/logs \
