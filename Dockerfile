@@ -1,75 +1,64 @@
-# Multi-stage Dockerfile for ProcessLink
+# ProcessLink Dockerfile
+# Note: This Dockerfile expects backend and frontend directories to be present
+# If using Coolify, ensure these directories are included in your repository
 
-# Backend build stage
-FROM node:18-alpine AS backend-build
-WORKDIR /app/backend
-COPY backend/package.json ./
-RUN npm install --production
-
-# Frontend build stage
-FROM node:18-alpine AS frontend-build
-WORKDIR /app/frontend
-COPY frontend/package*.json ./
-RUN npm ci
-COPY frontend/ ./
-RUN npm run build
-
-# Final stage
 FROM node:18-alpine
 
 # Install runtime dependencies
 RUN apk add --no-cache \
     ffmpeg \
-    nginx \
-    supervisor \
-    curl
+    python3 \
+    make \
+    g++
 
-# Create app directories
 WORKDIR /app
 
-# Copy backend
-COPY --from=backend-build /app/backend/node_modules ./backend/node_modules
-COPY backend/ ./backend/
+# Copy everything (Coolify will provide the full context)
+COPY . .
 
-# Copy frontend build and nginx config
-COPY --from=frontend-build /app/frontend/build ./frontend/build
-COPY nginx-docker.conf /etc/nginx/nginx.conf
+# Check if directories exist
+RUN ls -la && \
+    if [ ! -d "backend" ] || [ ! -d "frontend" ]; then \
+        echo "ERROR: backend or frontend directories not found!" && \
+        echo "Make sure these directories are committed to your git repository" && \
+        exit 1; \
+    fi
 
-# Create necessary directories
-RUN mkdir -p /app/backend/logs \
-    && mkdir -p /app/backend/uploads/temp \
-    && mkdir -p /app/backend/uploads/processed \
-    && mkdir -p /var/log/supervisor
+# Install and build backend
+WORKDIR /app/backend
+RUN npm install --production
 
-# Create supervisord config
-RUN cat > /etc/supervisor/conf.d/supervisord.conf <<EOF
-[supervisord]
-nodaemon=true
-logfile=/var/log/supervisor/supervisord.log
+# Install and build frontend
+WORKDIR /app/frontend
+RUN npm install && npm run build
 
-[program:backend]
-command=node /app/backend/src/server.js
-directory=/app/backend
-autostart=true
-autorestart=true
-stderr_logfile=/var/log/supervisor/backend.err.log
-stdout_logfile=/var/log/supervisor/backend.out.log
-environment=NODE_ENV="production"
+# Setup for production
+WORKDIR /app
 
-[program:nginx]
-command=/usr/sbin/nginx -g "daemon off;"
-autostart=true
-autorestart=true
-stderr_logfile=/var/log/supervisor/nginx.err.log
-stdout_logfile=/var/log/supervisor/nginx.out.log
+# Create a simple startup script
+RUN cat > /app/start.sh << 'EOF'
+#!/bin/sh
+echo "Starting ProcessLink..."
+
+# Start backend
+cd /app/backend
+NODE_ENV=production node src/server.js &
+
+# Wait for backend to start
+sleep 5
+
+# Simple file server for frontend (if nginx is not available)
+cd /app/frontend/build
+python3 -m http.server 5001 &
+
+# Keep container running
+wait
 EOF
+
+RUN chmod +x /app/start.sh
 
 # Expose ports
 EXPOSE 5000 5001
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=40s \
-    CMD curl -f http://localhost:5000/api/health || exit 1
-
-# Start supervisord
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+# Start services
+CMD ["/app/start.sh"]
