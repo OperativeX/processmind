@@ -229,9 +229,7 @@ echo "[BACKEND] Starting Node.js application..."
 cd /app/backend
 
 # Run with full error output
-exec node src/server.js 2>&1 | while IFS= read -r line; do
-    echo "[BACKEND] $line"
-done
+exec node src/server.js
 EOF
 
 RUN chmod +x /app/start-backend.sh
