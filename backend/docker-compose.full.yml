@@ -1,0 +1,123 @@
+version: '3.8'
+
+services:
+  # Backend API Service
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: processmind-backend
+    restart: unless-stopped
+    ports:
+      - "${PORT:-5000}:5000"
+    # Docker environment variables only - no .env file loading
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      # Redis connection - MUST use container name, not localhost
+      - REDIS_URL=redis://redis:6379
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - BULL_REDIS_URL=redis://redis:6379
+      # MongoDB connection - MUST use container name
+      - MONGODB_URI=mongodb://mongodb:27017/process-mind
+      # Frontend URLs can use defaults from .env
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:5001}
+      - CORS_ORIGIN=${CORS_ORIGIN:-http://localhost:5001}
+      # Essential keys (must be provided via Coolify environment)
+      - JWT_SECRET=${JWT_SECRET}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - SMTP_HOST=${SMTP_HOST:-smtp.gmail.com}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASS=${SMTP_PASS}
+      - EMAIL_FROM=${EMAIL_FROM:-"ProcessMind <noreply@processmind.com>"}
+      # Additional settings
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - DISABLE_WORKERS=${DISABLE_WORKERS:-false}
+    depends_on:
+      redis:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+    volumes:
+      # Persistent storage for uploads
+      - uploads-data:/app/uploads
+      - logs-data:/app/logs
+    networks:
+      - processmind-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:5000/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1); })"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Redis Service
+  redis:
+    image: redis:7-alpine
+    container_name: processmind-redis
+    restart: unless-stopped
+    command: >
+      redis-server
+      --appendonly yes
+      --appendfsync everysec
+      --maxmemory 512mb
+      --maxmemory-policy allkeys-lru
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - processmind-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # MongoDB Service
+  mongodb:
+    image: mongo:7
+    container_name: processmind-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      # Optional: Set MongoDB credentials
+      # MONGO_INITDB_ROOT_USERNAME: admin
+      # MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
+      MONGO_INITDB_DATABASE: process-mind
+    volumes:
+      - mongo-data:/data/db
+      - mongo-config:/data/configdb
+    networks:
+      - processmind-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command: >
+      mongod
+      --wiredTigerCacheSizeGB 1.5
+      --bind_ip_all
+
+# Networks
+networks:
+  processmind-network:
+    driver: bridge
+
+# Volumes
+volumes:
+  redis-data:
+    driver: local
+  mongo-data:
+    driver: local
+  mongo-config:
+    driver: local
+  uploads-data:
+    driver: local
+  logs-data:
+    driver: local

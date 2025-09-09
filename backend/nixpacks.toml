@@ -1,0 +1,6 @@
+# Nixpacks configuration to force Dockerfile usage
+[phases.setup]
+nixPkgs = ["nodejs-18_x", "ffmpeg"]
+
+[start]
+cmd = "node src/server.js"

@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # These will be set in Coolify environment variables
+        - REACT_APP_API_URL=${REACT_APP_API_URL}
+        - REACT_APP_MAX_FILE_SIZE=${REACT_APP_MAX_FILE_SIZE}
+    ports:
+      - "5001:80"
+    environment:
+      # Runtime environment variables (if needed)
+      - NODE_ENV=production
+      - TZ=Europe/Berlin
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - processlink-network
+
+networks:
+  processlink-network:
+    driver: bridge

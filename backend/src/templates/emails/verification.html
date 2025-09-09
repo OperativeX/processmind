@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verify Your Email - ProcessLink</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: #0d1117;
+      margin: 0;
+      padding: 0;
+      color: #c9d1d9;
+    }
+    .wrapper {
+      background-color: #0d1117;
+      padding: 40px 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #161b22;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+    .header {
+      background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+      color: #ffffff;
+      padding: 50px 30px;
+      text-align: center;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 600;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .header p {
+      margin: 10px 0 0;
+      font-size: 16px;
+      opacity: 0.9;
+    }
+    .content {
+      padding: 40px 30px;
+      background-color: #161b22;
+    }
+    .content h2 {
+      color: #f0f6fc;
+      font-size: 22px;
+      margin: 0 0 20px;
+      font-weight: 600;
+    }
+    .content p {
+      color: #8b949e;
+      line-height: 1.6;
+      margin: 15px 0;
+      font-size: 16px;
+    }
+    .code-container {
+      background-color: #010409;
+      border: 2px solid #7c3aed;
+      border-radius: 12px;
+      padding: 30px;
+      text-align: center;
+      margin: 30px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .code-container::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(124, 58, 237, 0.1) 0%, transparent 70%);
+      animation: pulse 3s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+    .code {
+      font-size: 36px;
+      font-weight: 700;
+      color: #7c3aed;
+      letter-spacing: 8px;
+      font-family: 'Courier New', monospace;
+      position: relative;
+      z-index: 1;
+      text-shadow: 0 0 20px rgba(124, 58, 237, 0.5);
+    }
+    .expiry-notice {
+      background-color: #21262d;
+      border-left: 4px solid #fbbf24;
+      padding: 15px 20px;
+      margin: 20px 0;
+      border-radius: 0 8px 8px 0;
+    }
+    .expiry-notice p {
+      color: #fbbf24;
+      margin: 0;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .footer {
+      background-color: #010409;
+      padding: 30px;
+      text-align: center;
+      border-top: 1px solid #30363d;
+    }
+    .footer p {
+      color: #58a6ff;
+      margin: 5px 0;
+      font-size: 13px;
+    }
+    .footer a {
+      color: #7c3aed;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .footer a:hover {
+      text-decoration: underline;
+    }
+    .security-notice {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #0d1117;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #8b949e;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="container">
+      <div class="header">
+        <h1>{{TENANT_NAME}}</h1>
+        <p>Email Verification Required</p>
+      </div>
+      
+      <div class="content">
+        <h2>Hello {{FIRST_NAME}},</h2>
+        <p>Welcome to {{TENANT_NAME}}! We're excited to have you on board.</p>
+        <p>To complete your registration and ensure the security of your account, please enter the verification code below:</p>
+        
+        <div class="code-container">
+          <div class="code">{{CODE}}</div>
+        </div>
+        
+        <div class="expiry-notice">
+          <p>⏱️ This code will expire in 10 minutes</p>
+        </div>
+        
+        <p>Once verified, you'll have access to all the powerful features of ProcessLink:</p>
+        <ul style="color: #8b949e; line-height: 1.8;">
+          <li>AI-powered video transcription and analysis</li>
+          <li>Automatic tag generation and organization</li>
+          <li>Interactive visualization of your content</li>
+          <li>Secure collaboration with your team</li>
+        </ul>
+        
+        <div class="security-notice">
+          🔒 If you didn't create an account with {{TENANT_NAME}}, please ignore this email.
+        </div>
+      </div>
+      
+      <div class="footer">
+        <p>&copy; {{YEAR}} {{TENANT_NAME}} - Powered by ProcessLink</p>
+        <p>Transforming video content into actionable insights with AI</p>
+        <p><a href="https://processlink.com">processlink.com</a></p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

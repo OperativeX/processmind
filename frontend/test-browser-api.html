@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Frontend API Test</title>
+</head>
+<body>
+    <h1>Process Mind - Frontend API Test</h1>
+    <div id="results"></div>
+    
+    <script>
+        const API_BASE = 'http://localhost:5000/api/v1';
+        const results = document.getElementById('results');
+        
+        function log(message, isError = false) {
+            const div = document.createElement('div');
+            div.style.margin = '10px 0';
+            div.style.color = isError ? 'red' : 'green';
+            div.textContent = message;
+            results.appendChild(div);
+        }
+        
+        async function testBrowserAPI() {
+            try {
+                log('🧪 Testing API from browser...');
+                
+                // Test authentication
+                log('1. Testing authentication...');
+                const authResponse = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include', // Important for CORS with credentials
+                    body: JSON.stringify({
+                        email: 'testuser@processmind.com',
+                        password: 'SecurePass123!'
+                    })
+                });
+                
+                if (!authResponse.ok) {
+                    throw new Error(`Auth failed: ${authResponse.status} ${authResponse.statusText}`);
+                }
+                
+                const authData = await authResponse.json();
+                const { tokens, tenant } = authData.data;
+                log('✅ Authentication successful from browser');
+                log(`   Tenant: ${tenant.name}`);
+                
+                // Test processes API
+                log('2. Testing processes API...');
+                const processesResponse = await fetch(`${API_BASE}/tenants/${tenant.id}/processes`, {
+                    headers: {
+                        'Authorization': `Bearer ${tokens.accessToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include'
+                });
+                
+                if (!processesResponse.ok) {
+                    throw new Error(`Processes API failed: ${processesResponse.status} ${processesResponse.statusText}`);
+                }
+                
+                const processesData = await processesResponse.json();
+                log('✅ Processes API working from browser');
+                log(`   Found ${processesData.data.processes.length} processes`);
+                
+                // Test graph data
+                log('3. Testing graph data API...');
+                const graphResponse = await fetch(`${API_BASE}/tenants/${tenant.id}/processes/graph-data`, {
+                    headers: {
+                        'Authorization': `Bearer ${tokens.accessToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include'
+                });
+                
+                if (!graphResponse.ok) {
+                    throw new Error(`Graph API failed: ${graphResponse.status} ${graphResponse.statusText}`);
+                }
+                
+                const graphData = await graphResponse.json();
+                log('✅ Graph Data API working from browser');
+                log(`   Nodes: ${graphData.data.nodes.length}, Links: ${graphData.data.links.length}`);
+                
+                log('🎉 All browser API calls successful!');
+                
+            } catch (error) {
+                log(`❌ Browser API Error: ${error.message}`, true);
+                console.error('Full error:', error);
+            }
+        }
+        
+        // Run test when page loads
+        testBrowserAPI();
+    </script>
+</body>
+</html>

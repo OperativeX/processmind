@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clear Process Mind Cache</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #0d1117;
+      color: #c9d1d9;
+    }
+    .container {
+      text-align: center;
+      padding: 40px;
+      background-color: #161b22;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+    button {
+      background-color: #7c3aed;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 10px;
+    }
+    button:hover {
+      background-color: #6d28d9;
+    }
+    .success {
+      color: #10b981;
+      margin-top: 20px;
+    }
+    .info {
+      color: #60a5fa;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Clear Process Mind Cache</h1>
+    <p>Click the button below to clear all cached data for Process Mind</p>
+    
+    <button onclick="clearAllCache()">Clear All Cache</button>
+    
+    <div id="result"></div>
+    
+    <div class="info">
+      After clearing cache, please refresh the page (Ctrl+F5 or Cmd+Shift+R)
+    </div>
+  </div>
+
+  <script>
+    function clearAllCache() {
+      const resultDiv = document.getElementById('result');
+      
+      try {
+        // Clear localStorage
+        const localStorageKeys = Object.keys(localStorage);
+        localStorageKeys.forEach(key => {
+          if (key.includes('process-mind') || key.includes('auth') || key.includes('user')) {
+            localStorage.removeItem(key);
+          }
+        });
+        
+        // Clear all localStorage for Process Mind
+        localStorage.clear();
+        
+        // Clear sessionStorage
+        sessionStorage.clear();
+        
+        // Clear cookies (limited by browser security)
+        document.cookie.split(";").forEach(function(c) { 
+          document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+        });
+        
+        // Clear React Query cache if exists
+        if (window.caches) {
+          caches.keys().then(names => {
+            names.forEach(name => {
+              caches.delete(name);
+            });
+          });
+        }
+        
+        resultDiv.innerHTML = '<p class="success">✓ Cache cleared successfully!</p><p>Please refresh the page now.</p>';
+        
+        // Auto refresh after 2 seconds
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 2000);
+        
+      } catch (error) {
+        resultDiv.innerHTML = '<p style="color: #ef4444;">Error clearing cache: ' + error.message + '</p>';
+      }
+    }
+  </script>
+</body>
+</html>

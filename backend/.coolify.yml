@@ -1,0 +1,21 @@
+# Coolify Configuration
+# This file tells Coolify to use Dockerfile instead of docker-compose
+
+build:
+  dockerfile: Dockerfile
+  context: .
+  target: production
+
+# Health check configuration
+healthcheck:
+  enabled: true
+  path: /health
+  interval: 30s
+  timeout: 10s
+  retries: 3
+
+# Environment variables that need to be set in Coolify UI:
+# - REDIS_URL (e.g., redis://your-redis-server:6379)
+# - MONGODB_URI (e.g., mongodb://your-mongodb-server:27017/process-mind)
+# - JWT_SECRET
+# - OPENAI_API_KEY
