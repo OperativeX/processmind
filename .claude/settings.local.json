@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "Bash(touch:*)",
+      "Bash(redis-cli:*)",
+      "Bash(npm ls:*)",
+      "Bash(node:*)",
+      "Bash(mongosh:*)",
+      "Bash(wget:*)",
+      "Bash(pkill:*)",
+      "Bash(grep:*)",
+      "Bash(lsof:*)",
+      "Bash(find:*)",
+      "Bash(npm start)",
+      "Bash(npm run dev:*)",
+      "Bash(ffmpeg:*)",
+      "Bash(true)",
+      "Bash(cd:*)",
+      "Bash(curl:*)"
+    ],
+    "deny": []
+  }
+}

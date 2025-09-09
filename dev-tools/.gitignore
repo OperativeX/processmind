@@ -1,0 +1,45 @@
+# Logs
+*.log
+logs/
+*.log.*
+
+# Test results
+test-results/
+coverage/
+.nyc_output/
+
+# Temporary files
+*.tmp
+temp/
+tmp/
+
+# Cache files
+.cache/
+*.cache
+
+# Environment files
+.env
+.env.*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Node modules (falls versehentlich hier erstellt)
+node_modules/
+
+# Build outputs
+dist/
+build/
+
+# Backup files
+*.backup
+*.bak
+*-backup-*.json

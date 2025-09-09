@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Process Mind - Technische Details zur Semantischen Ähnlichkeit</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            background-color: #0d1117;
+            color: #f0f6fc;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 80px 0 60px;
+            text-align: center;
+            background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+            border-bottom: 1px solid #30363d;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: #8b949e;
+            margin-bottom: 30px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 60px 0;
+            border-bottom: 1px solid #21262d;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: #f0f6fc;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 30px 0 20px;
+            color: #f0f6fc;
+        }
+
+        /* Code Blocks */
+        .code-block {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-size: 14px;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: attr(data-lang);
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: #7c3aed;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        pre {
+            margin: 0;
+            color: #e6edf3;
+        }
+
+        code {
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
+        }
+
+        /* Syntax Highlighting */
+        .comment { color: #8b949e; }
+        .keyword { color: #ff7b72; }
+        .string { color: #a5d6ff; }
+        .number { color: #79c0ff; }
+        .function { color: #d2a8ff; }
+        .variable { color: #ffa657; }
+
+        /* Math/Matrix Display */
+        .matrix {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+
+        .matrix-row {
+            margin: 5px 0;
+        }
+
+        .matrix-label {
+            color: #7c3aed;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        /* Feature Cards */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .feature-card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: #7c3aed;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(124, 58, 237, 0.2);
+        }
+
+        /* Info Boxes */
+        .info-box {
+            background: rgba(124, 58, 237, 0.1);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .info-box.warning {
+            background: rgba(251, 191, 36, 0.1);
+            border-color: rgba(251, 191, 36, 0.3);
+        }
+
+        .info-box.success {
+            background: rgba(34, 197, 94, 0.1);
+            border-color: rgba(34, 197, 94, 0.3);
+        }
+
+        /* Diagrams */
+        .diagram {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 40px;
+            margin: 30px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .flow-box {
+            background: #161b22;
+            border: 2px solid #30363d;
+            border-radius: 8px;
+            padding: 20px;
+            min-width: 150px;
+            transition: all 0.3s ease;
+        }
+
+        .flow-box:hover {
+            border-color: #7c3aed;
+            transform: scale(1.05);
+        }
+
+        .arrow {
+            color: #7c3aed;
+            font-size: 24px;
+            margin: 0 10px;
+        }
+
+        /* Performance Metrics */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .metric-card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #7c3aed;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            color: #8b949e;
+            font-size: 14px;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #30363d;
+        }
+
+        th {
+            background: #0d1117;
+            color: #7c3aed;
+            font-weight: 600;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: rgba(124, 58, 237, 0.05);
+        }
+
+        /* Links */
+        a {
+            color: #7c3aed;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #a78bfa;
+            text-decoration: underline;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin: 0 5px;
+        }
+
+        .badge.primary {
+            background: rgba(124, 58, 237, 0.2);
+            color: #a78bfa;
+        }
+
+        .badge.success {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .badge.warning {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.5rem; }
+            .flow-diagram { flex-direction: column; }
+            .arrow { transform: rotate(90deg); }
+        }
+
+        /* Copy Button */
+        .copy-button {
+            position: absolute;
+            top: 10px;
+            right: 60px;
+            background: #30363d;
+            border: 1px solid #484f58;
+            color: #f0f6fc;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .copy-button:hover {
+            background: #484f58;
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Process Mind Technical Deep Dive</h1>
+            <p class="subtitle">
+                Semantische Ähnlichkeit durch OpenAI Embeddings - Eine technische Analyse
+            </p>
+            <div style="margin-top: 20px;">
+                <span class="badge primary">Embeddings</span>
+                <span class="badge primary">Vector Search</span>
+                <span class="badge primary">Machine Learning</span>
+                <span class="badge success">Production Ready</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Introduction -->
+    <section class="section">
+        <div class="container">
+            <h2>📊 Das Problem: Inhaltliche Vernetzung von Videos</h2>
+            <p style="margin-bottom: 20px; color: #8b949e;">
+                Traditionelle Tag-basierte Systeme scheitern an der semantischen Komplexität von Inhalten. 
+                Ein Tag wie "erstellen" oder "auswählen" verbindet Videos ohne echten thematischen Zusammenhang.
+            </p>
+            
+            <div class="info-box warning">
+                <strong>⚠️ Tag-Problem:</strong> Bei 100 Videos mit je 10 Tags entstehen potentiell 1000 falsche Verbindungen 
+                durch generische Begriffe. Die Lösung: Semantische Embeddings.
+            </div>
+        </div>
+    </section>
+
+    <!-- Embeddings Explained -->
+    <section class="section">
+        <div class="container">
+            <h2>🧠 Was sind Embeddings?</h2>
+            
+            <p style="margin-bottom: 30px;">
+                Embeddings transformieren Text in hochdimensionale Vektoren, die semantische Bedeutung als geometrische 
+                Position im Raum kodieren. OpenAI's <code>text-embedding-ada-002</code> erzeugt 1536-dimensionale Vektoren.
+            </p>
+
+            <h3>Vereinfachtes Beispiel (3D statt 1536D)</h3>
+            <div class="matrix">
+                <div class="matrix-label">Text → Vector Transformation</div>
+                <div class="matrix-row">"Machine Learning Tutorial" → [0.82, 0.15, 0.67]</div>
+                <div class="matrix-row">"Deep Learning Grundlagen" → [0.79, 0.18, 0.71]</div>
+                <div class="matrix-row">"Kochrezept für Pasta"     → [0.12, 0.89, 0.23]</div>
+            </div>
+
+            <div class="code-block" data-lang="javascript">
+                <pre><code><span class="comment">// OpenAI Embedding Generation</span>
+<span class="keyword">const</span> <span class="function">generateEmbedding</span> = <span class="keyword">async</span> (<span class="variable">transcript</span>) => {
+  <span class="keyword">const</span> <span class="variable">response</span> = <span class="keyword">await</span> <span class="variable">openai</span>.<span class="function">createEmbedding</span>({
+    <span class="variable">model</span>: <span class="string">"text-embedding-ada-002"</span>,
+    <span class="variable">input</span>: <span class="variable">transcript</span>.<span class="function">slice</span>(<span class="number">0</span>, <span class="number">8000</span>) <span class="comment">// ~2000 tokens</span>
+  });
+  
+  <span class="keyword">return</span> <span class="variable">response</span>.<span class="variable">data</span>[<span class="number">0</span>].<span class="variable">embedding</span>; <span class="comment">// Float32Array[1536]</span>
+};</code></pre>
+                <button class="copy-button" onclick="copyCode(this)">Copy</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technical Implementation -->
+    <section class="section">
+        <div class="container">
+            <h2>🔧 Technische Implementierung</h2>
+            
+            <h3>1. Processing Pipeline</h3>
+            <div class="flow-diagram">
+                <div class="flow-box">
+                    <strong>Video Upload</strong><br>
+                    <small>MP4, AVI, etc.</small>
+                </div>
+                <span class="arrow">→</span>
+                <div class="flow-box">
+                    <strong>Transkription</strong><br>
+                    <small>Whisper API</small>
+                </div>
+                <span class="arrow">→</span>
+                <div class="flow-box">
+                    <strong>Embedding</strong><br>
+                    <small>Ada-002</small>
+                </div>
+                <span class="arrow">→</span>
+                <div class="flow-box">
+                    <strong>Speicherung</strong><br>
+                    <small>MongoDB/Vector DB</small>
+                </div>
+            </div>
+
+            <h3>2. Ähnlichkeitsberechnung: Cosinus-Distanz</h3>
+            <div class="code-block" data-lang="javascript">
+                <pre><code><span class="comment">// Cosinus-Ähnlichkeit zwischen zwei Vektoren</span>
+<span class="keyword">function</span> <span class="function">cosineSimilarity</span>(<span class="variable">vec1</span>, <span class="variable">vec2</span>) {
+  <span class="keyword">let</span> <span class="variable">dotProduct</span> = <span class="number">0</span>;
+  <span class="keyword">let</span> <span class="variable">norm1</span> = <span class="number">0</span>;
+  <span class="keyword">let</span> <span class="variable">norm2</span> = <span class="number">0</span>;
+  
+  <span class="keyword">for</span> (<span class="keyword">let</span> <span class="variable">i</span> = <span class="number">0</span>; <span class="variable">i</span> < <span class="variable">vec1</span>.<span class="variable">length</span>; <span class="variable">i</span>++) {
+    <span class="variable">dotProduct</span> += <span class="variable">vec1</span>[<span class="variable">i</span>] * <span class="variable">vec2</span>[<span class="variable">i</span>];
+    <span class="variable">norm1</span> += <span class="variable">vec1</span>[<span class="variable">i</span>] * <span class="variable">vec1</span>[<span class="variable">i</span>];
+    <span class="variable">norm2</span> += <span class="variable">vec2</span>[<span class="variable">i</span>] * <span class="variable">vec2</span>[<span class="variable">i</span>];
+  }
+  
+  <span class="keyword">return</span> <span class="variable">dotProduct</span> / (<span class="variable">Math</span>.<span class="function">sqrt</span>(<span class="variable">norm1</span>) * <span class="variable">Math</span>.<span class="function">sqrt</span>(<span class="variable">norm2</span>));
+}
+
+<span class="comment">// Ergebnis: 0.0 (orthogonal) bis 1.0 (identisch)</span></code></pre>
+                <button class="copy-button" onclick="copyCode(this)">Copy</button>
+            </div>
+
+            <div class="info-box">
+                <strong>💡 Mathematischer Hintergrund:</strong> Die Cosinus-Ähnlichkeit misst den Winkel zwischen zwei Vektoren 
+                im hochdimensionalen Raum. Je kleiner der Winkel, desto ähnlicher sind die Inhalte.
+            </div>
+        </div>
+    </section>
+
+    <!-- Database Schema -->
+    <section class="section">
+        <div class="container">
+            <h2>💾 Datenbank-Schema & Speicherung</h2>
+            
+            <h3>MongoDB Schema Erweiterung</h3>
+            <div class="code-block" data-lang="javascript">
+                <pre><code><span class="keyword">const</span> <span class="variable">processSchema</span> = <span class="keyword">new</span> <span class="variable">mongoose</span>.<span class="function">Schema</span>({
+  <span class="comment">// Existing fields...</span>
+  <span class="variable">title</span>: <span class="variable">String</span>,
+  <span class="variable">transcript</span>: <span class="variable">Object</span>,
+  
+  <span class="comment">// NEU: Embedding Storage</span>
+  <span class="variable">embedding</span>: {
+    <span class="variable">type</span>: [<span class="variable">Number</span>], <span class="comment">// 1536 Float values</span>
+    <span class="variable">validate</span>: [<span class="variable">arr</span> => <span class="variable">arr</span>.<span class="variable">length</span> === <span class="number">1536</span>, <span class="string">'Invalid embedding dimension'</span>]
+  },
+  
+  <span class="comment">// NEU: Gewichtete Tags</span>
+  <span class="variable">tagWeights</span>: [{
+    <span class="variable">name</span>: <span class="variable">String</span>,
+    <span class="variable">weight</span>: { <span class="variable">type</span>: <span class="variable">Number</span>, <span class="variable">min</span>: <span class="number">0</span>, <span class="variable">max</span>: <span class="number">1</span> }
+  }],
+  
+  <span class="comment">// Metadata</span>
+  <span class="variable">embeddingModel</span>: { <span class="variable">type</span>: <span class="variable">String</span>, <span class="variable">default</span>: <span class="string">'ada-002'</span> },
+  <span class="variable">embeddingGeneratedAt</span>: <span class="variable">Date</span>
+});</code></pre>
+                <button class="copy-button" onclick="copyCode(this)">Copy</button>
+            </div>
+
+            <h3>Speicher-Anforderungen</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Komponente</th>
+                        <th>Größe</th>
+                        <th>Berechnung</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Embedding Vector</td>
+                        <td>6 KB</td>
+                        <td>1536 floats × 4 bytes</td>
+                    </tr>
+                    <tr>
+                        <td>Pro 1000 Videos</td>
+                        <td>6 MB</td>
+                        <td>Nur Embeddings</td>
+                    </tr>
+                    <tr>
+                        <td>Ähnlichkeitsmatrix</td>
+                        <td>4 MB</td>
+                        <td>1000² × 4 bytes (cached)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Performance Optimization -->
+    <section class="section">
+        <div class="container">
+            <h2>⚡ Performance-Optimierung</h2>
+            
+            <h3>1. Batch Processing für Ähnlichkeitsberechnung</h3>
+            <div class="code-block" data-lang="javascript">
+                <pre><code><span class="comment">// Optimierte Matrix-Berechnung mit Caching</span>
+<span class="keyword">class</span> <span class="function">SimilarityCache</span> {
+  <span class="keyword">constructor</span>(<span class="variable">redisClient</span>) {
+    <span class="keyword">this</span>.<span class="variable">redis</span> = <span class="variable">redisClient</span>;
+    <span class="keyword">this</span>.<span class="variable">TTL</span> = <span class="number">3600</span>; <span class="comment">// 1 hour cache</span>
+  }
+  
+  <span class="keyword">async</span> <span class="function">getSimilarityMatrix</span>(<span class="variable">tenantId</span>) {
+    <span class="keyword">const</span> <span class="variable">cacheKey</span> = <span class="string">`similarity:${tenantId}`</span>;
+    <span class="keyword">const</span> <span class="variable">cached</span> = <span class="keyword">await</span> <span class="keyword">this</span>.<span class="variable">redis</span>.<span class="function">get</span>(<span class="variable">cacheKey</span>);
+    
+    <span class="keyword">if</span> (<span class="variable">cached</span>) {
+      <span class="keyword">return</span> <span class="variable">JSON</span>.<span class="function">parse</span>(<span class="variable">cached</span>);
+    }
+    
+    <span class="comment">// Berechne Matrix im Background Job</span>
+    <span class="keyword">await</span> <span class="variable">bullQueue</span>.<span class="function">add</span>(<span class="string">'compute-similarity'</span>, { <span class="variable">tenantId</span> });
+    <span class="keyword">return</span> <span class="keyword">null</span>;
+  }
+}</code></pre>
+                <button class="copy-button" onclick="copyCode(this)">Copy</button>
+            </div>
+
+            <h3>2. Vector Database Integration (Zukunft)</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Pinecone</h4>
+                    <p>Managed vector database mit automatischer Skalierung</p>
+                    <div class="metric-value">~10ms</div>
+                    <div class="metric-label">Query Latency</div>
+                </div>
+                <div class="feature-card">
+                    <h4>Weaviate</h4>
+                    <p>Open-source mit GraphQL API</p>
+                    <div class="metric-value">Self-hosted</div>
+                    <div class="metric-label">Deployment</div>
+                </div>
+                <div class="feature-card">
+                    <h4>Qdrant</h4>
+                    <p>Rust-basiert, hohe Performance</p>
+                    <div class="metric-value">1M+ vectors/s</div>
+                    <div class="metric-label">Throughput</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hybrid Approach -->
+    <section class="section">
+        <div class="container">
+            <h2>🔄 Hybrid Graph Approach</h2>
+            
+            <p style="margin-bottom: 30px;">
+                Die Kombination aus semantischen Embeddings und gewichteten Tags bietet das Beste aus beiden Welten:
+            </p>
+
+            <div class="code-block" data-lang="javascript">
+                <pre><code><span class="comment">// Hybrid Similarity Calculation</span>
+<span class="keyword">function</span> <span class="function">calculateHybridSimilarity</span>(<span class="variable">process1</span>, <span class="variable">process2</span>) {
+  <span class="comment">// 1. Semantische Ähnlichkeit (60% Gewichtung)</span>
+  <span class="keyword">const</span> <span class="variable">semanticSim</span> = <span class="function">cosineSimilarity</span>(
+    <span class="variable">process1</span>.<span class="variable">embedding</span>, 
+    <span class="variable">process2</span>.<span class="variable">embedding</span>
+  );
+  
+  <span class="comment">// 2. Tag-basierte Ähnlichkeit mit Gewichtung (40%)</span>
+  <span class="keyword">const</span> <span class="variable">tagSim</span> = <span class="function">calculateWeightedTagOverlap</span>(
+    <span class="variable">process1</span>.<span class="variable">tagWeights</span>,
+    <span class="variable">process2</span>.<span class="variable">tagWeights</span>
+  );
+  
+  <span class="comment">// 3. Kombinierter Score</span>
+  <span class="keyword">const</span> <span class="variable">hybridScore</span> = (<span class="number">0.6</span> * <span class="variable">semanticSim</span>) + (<span class="number">0.4</span> * <span class="variable">tagSim</span>);
+  
+  <span class="comment">// 4. Schwellenwert für Verbindung</span>
+  <span class="keyword">return</span> <span class="variable">hybridScore</span> > <span class="number">0.5</span> ? <span class="variable">hybridScore</span> : <span class="number">0</span>;
+}</code></pre>
+                <button class="copy-button" onclick="copyCode(this)">Copy</button>
+            </div>
+
+            <h3>Gewichtete Tag-Generierung</h3>
+            <div class="code-block" data-lang="javascript">
+                <pre><code><span class="comment">// Optimierter Prompt für gewichtete Tags</span>
+<span class="keyword">const</span> <span class="variable">tagPrompt</span> = <span class="string">`
+Analysiere das Transkript und generiere gewichtete Tags:
+
+Format: [{"tag": "begriff", "weight": 0.0-1.0}]
+
+Gewichtung:
+- 0.8-1.0: Kernthemen, Hauptkonzepte
+- 0.5-0.7: Wichtige Nebenthemen  
+- 0.2-0.4: Erwähnte Konzepte
+- < 0.2: NICHT ausgeben
+
+Maximal 10 hochwertige Tags.
+`</span>;</code></pre>
+                <button class="copy-button" onclick="copyCode(this)">Copy</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cost Analysis -->
+    <section class="section">
+        <div class="container">
+            <h2>💰 Kosten-Analyse</h2>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value">$0.0001</div>
+                    <div class="metric-label">pro 1K Tokens</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">~2000</div>
+                    <div class="metric-label">Tokens pro Video</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">$0.0002</div>
+                    <div class="metric-label">Kosten pro Video</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">$0.20</div>
+                    <div class="metric-label">pro 1000 Videos</div>
+                </div>
+            </div>
+
+            <div class="info-box success">
+                <strong>✅ ROI:</strong> Die Embedding-Kosten sind vernachlässigbar im Vergleich zum Mehrwert 
+                der intelligenten Vernetzung. Bei $0.0002 pro Video amortisiert sich die Investition sofort.
+            </div>
+        </div>
+    </section>
+
+    <!-- Implementation Example -->
+    <section class="section">
+        <div class="container">
+            <h2>🚀 Praktisches Implementierungsbeispiel</h2>
+            
+            <div class="code-block" data-lang="javascript">
+                <pre><code><span class="comment">// Complete Graph Generation Pipeline</span>
+<span class="keyword">async</span> <span class="function">generateSemanticGraph</span>(<span class="variable">tenantId</span>) {
+  <span class="comment">// 1. Lade alle Prozesse mit Embeddings</span>
+  <span class="keyword">const</span> <span class="variable">processes</span> = <span class="keyword">await</span> <span class="variable">Process</span>.<span class="function">find</span>({
+    <span class="variable">tenantId</span>,
+    <span class="variable">embedding</span>: { <span class="variable">$exists</span>: <span class="keyword">true</span> }
+  }).<span class="function">lean</span>();
+  
+  <span class="comment">// 2. Berechne Ähnlichkeitsmatrix</span>
+  <span class="keyword">const</span> <span class="variable">nodes</span> = [];
+  <span class="keyword">const</span> <span class="variable">links</span> = [];
+  
+  <span class="keyword">for</span> (<span class="keyword">let</span> <span class="variable">i</span> = <span class="number">0</span>; <span class="variable">i</span> < <span class="variable">processes</span>.<span class="variable">length</span>; <span class="variable">i</span>++) {
+    <span class="variable">nodes</span>.<span class="function">push</span>({
+      <span class="variable">id</span>: <span class="variable">processes</span>[<span class="variable">i</span>].<span class="variable">_id</span>,
+      <span class="variable">title</span>: <span class="variable">processes</span>[<span class="variable">i</span>].<span class="variable">title</span>,
+      <span class="variable">type</span>: <span class="string">'process'</span>,
+      <span class="variable">tags</span>: <span class="variable">processes</span>[<span class="variable">i</span>].<span class="variable">tagWeights</span>
+    });
+    
+    <span class="keyword">for</span> (<span class="keyword">let</span> <span class="variable">j</span> = <span class="variable">i</span> + <span class="number">1</span>; <span class="variable">j</span> < <span class="variable">processes</span>.<span class="variable">length</span>; <span class="variable">j</span>++) {
+      <span class="keyword">const</span> <span class="variable">similarity</span> = <span class="function">calculateHybridSimilarity</span>(
+        <span class="variable">processes</span>[<span class="variable">i</span>], 
+        <span class="variable">processes</span>[<span class="variable">j</span>]
+      );
+      
+      <span class="keyword">if</span> (<span class="variable">similarity</span> > <span class="number">0</span>) {
+        <span class="variable">links</span>.<span class="function">push</span>({
+          <span class="variable">source</span>: <span class="variable">processes</span>[<span class="variable">i</span>].<span class="variable">_id</span>,
+          <span class="variable">target</span>: <span class="variable">processes</span>[<span class="variable">j</span>].<span class="variable">_id</span>,
+          <span class="variable">weight</span>: <span class="variable">similarity</span>,
+          <span class="variable">type</span>: <span class="string">'semantic'</span>
+        });
+      }
+    }
+  }
+  
+  <span class="comment">// 3. Cache results</span>
+  <span class="keyword">await</span> <span class="variable">redis</span>.<span class="function">setex</span>(
+    <span class="string">`graph:${tenantId}`</span>, 
+    <span class="number">3600</span>, 
+    <span class="variable">JSON</span>.<span class="function">stringify</span>({ <span class="variable">nodes</span>, <span class="variable">links</span> })
+  );
+  
+  <span class="keyword">return</span> { <span class="variable">nodes</span>, <span class="variable">links</span> };
+}</code></pre>
+                <button class="copy-button" onclick="copyCode(this)">Copy</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Conclusion -->
+    <section class="section">
+        <div class="container">
+            <h2>📈 Performance Metriken & Skalierung</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Videos</th>
+                        <th>Berechnungszeit</th>
+                        <th>Speicher (RAM)</th>
+                        <th>Cache-Größe</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>100</td>
+                        <td>~200ms</td>
+                        <td>10 MB</td>
+                        <td>40 KB</td>
+                    </tr>
+                    <tr>
+                        <td>1,000</td>
+                        <td>~2s</td>
+                        <td>100 MB</td>
+                        <td>4 MB</td>
+                    </tr>
+                    <tr>
+                        <td>10,000</td>
+                        <td>~3min*</td>
+                        <td>1 GB</td>
+                        <td>400 MB</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p style="margin-top: 10px; color: #8b949e; font-size: 14px;">
+                * Mit Background Processing und Caching
+            </p>
+
+            <div class="info-box success" style="margin-top: 40px;">
+                <strong>🎯 Fazit:</strong> Die Kombination aus OpenAI Embeddings und intelligenter Caching-Strategie 
+                ermöglicht eine skalierbare, kosteneffiziente Lösung für semantische Video-Vernetzung. 
+                Der Hybrid-Ansatz bietet maximale Flexibilität und Präzision.
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Copy code functionality
+        function copyCode(button) {
+            const codeBlock = button.parentElement.querySelector('pre code');
+            const text = codeBlock.textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.style.background = '#22c55e';
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '#30363d';
+                }, 2000);
+            });
+        }
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Animate elements on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.feature-card, .metric-card, .info-box').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Complete Auth Cleanup & Debug</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #1a1a1a; color: #fff; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .section { margin: 20px 0; padding: 15px; border: 1px solid #333; border-radius: 5px; }
+        button { padding: 10px 15px; margin: 5px; background: #7c3aed; color: white; border: none; border-radius: 3px; cursor: pointer; }
+        button:hover { background: #6d28d9; }
+        .output { background: #000; padding: 10px; border-radius: 3px; white-space: pre-wrap; font-family: monospace; }
+        .success { color: #22c55e; }
+        .error { color: #ef4444; }
+        .info { color: #3b82f6; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Complete Auth Cleanup & Debug</h1>
+        
+        <div class="section">
+            <h2>Step 1: Current State Analysis</h2>
+            <button onclick="analyzeCurrentState()">Analyze Current Auth State</button>
+            <div id="analysis" class="output"></div>
+        </div>
+        
+        <div class="section">
+            <h2>Step 2: Complete Cleanup</h2>
+            <button onclick="performCompleteCleanup()">Clear All Auth Data</button>
+            <div id="cleanup" class="output"></div>
+        </div>
+        
+        <div class="section">
+            <h2>Step 3: Test Backend Connection</h2>
+            <button onclick="testBackendConnection()">Test Backend APIs</button>
+            <div id="backend-test" class="output"></div>
+        </div>
+        
+        <div class="section">
+            <h2>Step 4: Test Login Flow</h2>
+            <button onclick="testLoginFlow()">Test Complete Login Flow</button>
+            <div id="login-test" class="output"></div>
+        </div>
+    </div>
+
+    <script>
+        const log = (elementId, message, type = 'info') => {
+            const element = document.getElementById(elementId);
+            const timestamp = new Date().toLocaleTimeString();
+            const className = type === 'success' ? 'success' : type === 'error' ? 'error' : 'info';
+            element.innerHTML += `<span class="${className}">[${timestamp}] ${message}</span>\n`;
+        };
+
+        const STORAGE_KEYS = {
+            ACCESS_TOKEN: 'process_mind_access_token',
+            REFRESH_TOKEN: 'process_mind_refresh_token',
+            USER: 'process_mind_user',
+            TENANT: 'process_mind_tenant',
+            EXPIRES_IN: 'process_mind_expires_in',
+        };
+
+        function analyzeCurrentState() {
+            const analysisEl = document.getElementById('analysis');
+            analysisEl.innerHTML = '';
+            
+            log('analysis', '🔍 ANALYZING CURRENT AUTH STATE', 'info');
+            log('analysis', '=====================================');
+            
+            // Check localStorage
+            let hasAuthData = false;
+            Object.entries(STORAGE_KEYS).forEach(([key, storageKey]) => {
+                const value = localStorage.getItem(storageKey);
+                if (value) {
+                    hasAuthData = true;
+                    log('analysis', `✅ ${key}: ${value.substring(0, 30)}...`, 'success');
+                } else {
+                    log('analysis', `❌ ${key}: null`, 'error');
+                }
+            });
+            
+            // Check sessionStorage
+            log('analysis', '\n📦 SessionStorage Check:');
+            if (sessionStorage.length === 0) {
+                log('analysis', '   Empty', 'info');
+            } else {
+                for (let i = 0; i < sessionStorage.length; i++) {
+                    const key = sessionStorage.key(i);
+                    log('analysis', `   ${key}: ${sessionStorage.getItem(key).substring(0, 30)}...`);
+                }
+            }
+            
+            // Check cookies
+            log('analysis', '\n🍪 Cookies Check:');
+            if (document.cookie) {
+                log('analysis', `   ${document.cookie}`, 'info');
+            } else {
+                log('analysis', '   No cookies found', 'info');
+            }
+            
+            log('analysis', `\n💡 Result: ${hasAuthData ? 'AUTH DATA FOUND' : 'NO AUTH DATA'}`, hasAuthData ? 'success' : 'info');
+        }
+
+        function performCompleteCleanup() {
+            const cleanupEl = document.getElementById('cleanup');
+            cleanupEl.innerHTML = '';
+            
+            log('cleanup', '🧹 PERFORMING COMPLETE AUTH CLEANUP', 'info');
+            log('cleanup', '======================================');
+            
+            // Clear localStorage
+            let cleared = 0;
+            Object.entries(STORAGE_KEYS).forEach(([key, storageKey]) => {
+                if (localStorage.getItem(storageKey)) {
+                    localStorage.removeItem(storageKey);
+                    cleared++;
+                    log('cleanup', `✅ Cleared ${key}`, 'success');
+                }
+            });
+            
+            // Clear sessionStorage
+            sessionStorage.clear();
+            log('cleanup', '✅ Cleared sessionStorage', 'success');
+            
+            // Clear cookies (if any auth-related)
+            document.cookie.split(";").forEach(cookie => {
+                const eqPos = cookie.indexOf("=");
+                const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
+                if (name.includes('auth') || name.includes('token') || name.includes('session')) {
+                    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+                    log('cleanup', `✅ Cleared cookie: ${name}`, 'success');
+                }
+            });
+            
+            log('cleanup', `\n✅ CLEANUP COMPLETE! Cleared ${cleared} items`, 'success');
+            log('cleanup', '💡 Now refresh your React app to test login flow', 'info');
+        }
+
+        async function testBackendConnection() {
+            const testEl = document.getElementById('backend-test');
+            testEl.innerHTML = '';
+            
+            log('backend-test', '🔌 TESTING BACKEND CONNECTION', 'info');
+            log('backend-test', '===============================');
+            
+            const API_BASE = 'http://localhost:5000/api/v1';
+            
+            try {
+                // Test health check
+                log('backend-test', '1. Testing server health...');
+                const healthResponse = await fetch(`${API_BASE}/health`).catch(() => null);
+                if (healthResponse && healthResponse.ok) {
+                    log('backend-test', '   ✅ Server is running', 'success');
+                } else {
+                    log('backend-test', '   ❌ Server health check failed', 'error');
+                    log('backend-test', '   🔧 Make sure backend is running on port 5000', 'info');
+                    return;
+                }
+                
+                // Test login endpoint
+                log('backend-test', '2. Testing login endpoint...');
+                const loginResponse = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: 'testuser@processmind.com',
+                        password: 'SecurePass123!'
+                    })
+                });
+                
+                if (loginResponse.ok) {
+                    const loginData = await loginResponse.json();
+                    log('backend-test', '   ✅ Login endpoint working', 'success');
+                    log('backend-test', `   📊 Response structure: ${JSON.stringify(Object.keys(loginData), null, 2)}`, 'info');
+                    
+                    // Test authenticated endpoint
+                    if (loginData.data && loginData.data.tokens) {
+                        log('backend-test', '3. Testing authenticated endpoint...');
+                        const token = loginData.data.tokens.accessToken;
+                        const tenantId = loginData.data.tenant.id;
+                        
+                        const processResponse = await fetch(`${API_BASE}/tenants/${tenantId}/processes`, {
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        });
+                        
+                        if (processResponse.ok) {
+                            log('backend-test', '   ✅ Authenticated endpoints working', 'success');
+                        } else {
+                            log('backend-test', `   ❌ Auth failed: ${processResponse.status} ${processResponse.statusText}`, 'error');
+                        }
+                    }
+                } else {
+                    const errorData = await loginResponse.json().catch(() => ({}));
+                    log('backend-test', `   ❌ Login failed: ${loginResponse.status} ${loginResponse.statusText}`, 'error');
+                    log('backend-test', `   📄 Error: ${JSON.stringify(errorData, null, 2)}`, 'error');
+                }
+                
+            } catch (error) {
+                log('backend-test', `❌ Connection error: ${error.message}`, 'error');
+                log('backend-test', '🔧 Check if backend is running and accessible', 'info');
+            }
+        }
+
+        async function testLoginFlow() {
+            const testEl = document.getElementById('login-test');
+            testEl.innerHTML = '';
+            
+            log('login-test', '🧪 TESTING COMPLETE LOGIN FLOW', 'info');
+            log('login-test', '=================================');
+            
+            // Check if we're on localhost:5001
+            if (!window.location.href.includes('localhost:5001') && !window.location.href.includes('localhost:3000')) {
+                log('login-test', '❌ Please run this test from your React app (localhost:5001)', 'error');
+                return;
+            }
+            
+            log('login-test', '1. Clearing all auth data...');
+            performCompleteCleanup();
+            
+            log('login-test', '2. Checking current page...');
+            log('login-test', `   Current URL: ${window.location.href}`);
+            
+            // Wait for React to potentially redirect
+            setTimeout(() => {
+                log('login-test', '3. Checking redirect behavior...');
+                if (window.location.pathname === '/login') {
+                    log('login-test', '   ✅ Correctly redirected to login page', 'success');
+                } else if (window.location.pathname === '/dashboard' || window.location.pathname === '/') {
+                    log('login-test', '   ❌ Still on dashboard - AUTH BYPASS DETECTED!', 'error');
+                    log('login-test', '   🔍 This indicates the ProtectedRoute is not working correctly', 'error');
+                    
+                    // Additional debug info
+                    log('login-test', '   🔍 DEBUG TIPS:', 'info');
+                    log('login-test', '   1. Open browser console and look for AuthContext logs', 'info');
+                    log('login-test', '   2. Look for ProtectedRoute evaluation logs', 'info');
+                    log('login-test', '   3. Check if AuthContext isAuthenticated is incorrectly true', 'info');
+                    log('login-test', '   4. Check if token refresh is incorrectly succeeding', 'info');
+                } else {
+                    log('login-test', `   ℹ️  On page: ${window.location.pathname}`, 'info');
+                }
+                
+                log('login-test', '4. Force page reload to trigger AuthContext...');
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+                
+            }, 2000);
+        }
+
+        // Auto-analyze on page load
+        window.addEventListener('load', () => {
+            setTimeout(analyzeCurrentState, 500);
+        });
+    </script>
+</body>
+</html>

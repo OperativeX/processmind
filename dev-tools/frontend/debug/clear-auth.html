@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clear Auth Data</title>
+</head>
+<body>
+    <h1>Clear Authentication Data</h1>
+    <button onclick="clearAuth()">Clear localStorage</button>
+    <div id="result"></div>
+    
+    <script>
+        function clearAuth() {
+            const keys = [
+                'process_mind_access_token',
+                'process_mind_refresh_token',
+                'process_mind_user',
+                'process_mind_tenant',
+                'process_mind_expires_in'
+            ];
+            
+            console.log('Current localStorage:');
+            keys.forEach(key => {
+                const value = localStorage.getItem(key);
+                console.log(key + ':', value ? value.substring(0, 50) + '...' : 'null');
+            });
+            
+            keys.forEach(key => localStorage.removeItem(key));
+            
+            document.getElementById('result').innerHTML = 
+                '<p style="color: green;">✅ Authentication data cleared! Refresh your React app.</p>';
+            
+            console.log('✅ Authentication data cleared!');
+        }
+        
+        // Auto-clear on page load
+        clearAuth();
+    </script>
+</body>
+</html>

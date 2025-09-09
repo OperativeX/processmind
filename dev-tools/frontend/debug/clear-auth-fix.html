@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clear Authentication Data - Fixed Version</title>
+</head>
+<body>
+    <h1>Clear Process Mind Authentication Data</h1>
+    <button onclick="clearAuth()">Clear All Auth Data</button>
+    <div id="result"></div>
+
+    <script>
+        function clearAuth() {
+            const keys = [
+                'process_mind_access_token',
+                'process_mind_refresh_token', 
+                'process_mind_user',
+                'process_mind_tenant',
+                'process_mind_expires_in'
+            ];
+            
+            let cleared = [];
+            keys.forEach(key => {
+                if (localStorage.getItem(key)) {
+                    cleared.push(key);
+                    localStorage.removeItem(key);
+                }
+            });
+            
+            document.getElementById('result').innerHTML = 
+                cleared.length > 0 
+                    ? `Cleared: ${cleared.join(', ')}<br><strong>Now refresh the app - you should see the login page.</strong>`
+                    : 'No auth data found to clear.';
+        }
+    </script>
+</body>
+</html>

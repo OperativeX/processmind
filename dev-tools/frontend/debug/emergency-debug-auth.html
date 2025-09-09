@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>🚨 EMERGENCY AUTH DEBUG</title>
+    <style>
+        body { font-family: monospace; background: #000; color: #0f0; padding: 20px; }
+        .critical { color: #f00; font-weight: bold; }
+        .success { color: #0f0; font-weight: bold; }
+        .warning { color: #ff0; font-weight: bold; }
+        .section { border: 1px solid #333; margin: 10px 0; padding: 10px; }
+        button { padding: 10px; margin: 5px; background: #333; color: #fff; border: 1px solid #666; }
+    </style>
+</head>
+<body>
+    <h1>🚨 EMERGENCY AUTH DEBUG - Dashboard Bypass Issue</h1>
+    
+    <div class="section">
+        <h2>STEP 1: Nuclear localStorage Clear</h2>
+        <button onclick="nuclearClear()">🧨 NUCLEAR CLEAR ALL STORAGE</button>
+        <div id="clear-result"></div>
+    </div>
+    
+    <div class="section">
+        <h2>STEP 2: Force React App Reset</h2>
+        <button onclick="forceReactReset()">🔄 FORCE REACT APP RESET</button>
+        <div id="react-result"></div>
+    </div>
+    
+    <div class="section">
+        <h2>STEP 3: AuthContext Override Test</h2>
+        <button onclick="overrideAuthContext()">⚡ OVERRIDE AUTH CONTEXT</button>
+        <div id="override-result"></div>
+    </div>
+
+    <script>
+        function log(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            const className = type === 'critical' ? 'critical' : type === 'success' ? 'success' : type === 'warning' ? 'warning' : '';
+            element.innerHTML += `<div class="${className}">${message}</div>`;
+        }
+
+        function nuclearClear() {
+            const result = document.getElementById('clear-result');
+            result.innerHTML = '';
+            
+            log('clear-result', '🧨 NUCLEAR CLEAR INITIATED', 'critical');
+            
+            // Clear ALL localStorage
+            let cleared = 0;
+            for (let i = localStorage.length - 1; i >= 0; i--) {
+                const key = localStorage.key(i);
+                localStorage.removeItem(key);
+                cleared++;
+                log('clear-result', `Cleared: ${key}`);
+            }
+            
+            // Clear ALL sessionStorage
+            let sessionCleared = 0;
+            for (let i = sessionStorage.length - 1; i >= 0; i--) {
+                const key = sessionStorage.key(i);
+                sessionStorage.removeItem(key);
+                sessionCleared++;
+                log('clear-result', `Session cleared: ${key}`);
+            }
+            
+            // Clear ALL cookies
+            document.cookie.split(";").forEach(cookie => {
+                const eqPos = cookie.indexOf("=");
+                const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
+                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=localhost";
+                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+                log('clear-result', `Cookie cleared: ${name}`);
+            });
+            
+            log('clear-result', `✅ NUCLEAR CLEAR COMPLETE: ${cleared} localStorage, ${sessionCleared} sessionStorage items cleared`, 'success');
+            
+            // Verify clearing
+            setTimeout(() => {
+                if (localStorage.length === 0 && sessionStorage.length === 0) {
+                    log('clear-result', '✅ VERIFICATION: All storage cleared', 'success');
+                } else {
+                    log('clear-result', '❌ VERIFICATION FAILED: Some items remain', 'critical');
+                }
+            }, 100);
+        }
+
+        function forceReactReset() {
+            const result = document.getElementById('react-result');
+            result.innerHTML = '';
+            
+            log('react-result', '🔄 FORCING REACT APP RESET', 'warning');
+            
+            // Method 1: Hard reload with cache clear
+            log('react-result', 'Method 1: Hard reload in 3 seconds...');
+            setTimeout(() => {
+                window.location.href = 'http://localhost:5001/?nocache=' + Date.now();
+            }, 3000);
+        }
+
+        function overrideAuthContext() {
+            const result = document.getElementById('override-result');
+            result.innerHTML = '';
+            
+            log('override-result', '⚡ ATTEMPTING AUTH CONTEXT OVERRIDE', 'warning');
+            
+            // This will only work if we're on the React app
+            if (window.location.href.includes('localhost:5001')) {
+                log('override-result', 'On React app - attempting override...');
+                
+                // Try to access React DevTools or context
+                if (window.React || window.__REACT_DEVTOOLS_GLOBAL_HOOK__) {
+                    log('override-result', 'React detected - checking for AuthContext...');
+                    
+                    // Force a navigation to login
+                    log('override-result', 'Force navigation to /login in 2 seconds...');
+                    setTimeout(() => {
+                        window.history.pushState({}, '', '/login');
+                        window.location.reload();
+                    }, 2000);
+                } else {
+                    log('override-result', '❌ React not detected - run this from localhost:5001', 'critical');
+                }
+            } else {
+                log('override-result', '❌ Not on React app - navigate to localhost:5001 first', 'critical');
+            }
+        }
+
+        // Auto-execute nuclear clear on load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                log('clear-result', '🚨 AUTO-EXECUTING NUCLEAR CLEAR...', 'critical');
+                nuclearClear();
+                
+                setTimeout(() => {
+                    log('react-result', '🚨 AUTO-EXECUTING REACT RESET...', 'critical');
+                    forceReactReset();
+                }, 2000);
+            }, 1000);
+        });
+
+        // Emergency instructions
+        console.log('🚨 EMERGENCY DEBUG LOADED');
+        console.log('=====================================');
+        console.log('1. This page will auto-clear ALL storage in 1 second');
+        console.log('2. Then it will redirect to React app with cache-bust');
+        console.log('3. Check browser console for AuthContext debug logs');
+        console.log('4. If still bypassing login, there is a fundamental routing issue');
+        console.log('=====================================');
+    </script>
+</body>
+</html>

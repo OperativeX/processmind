@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Process Mind Technology - Intelligente Video-Vernetzung</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #0d1117;
+            color: #f0f6fc;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 100px 0 80px;
+            text-align: center;
+            background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.1) 0%, transparent 70%);
+            animation: pulse 20s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.3; }
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: #8b949e;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 80px 0;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 50px;
+            color: #f0f6fc;
+        }
+
+        /* Feature Cards */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .feature-card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #7c3aed 0%, #a78bfa 100%);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: #7c3aed;
+            box-shadow: 0 10px 30px rgba(124, 58, 237, 0.2);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #f0f6fc;
+        }
+
+        .feature-description {
+            color: #8b949e;
+            line-height: 1.8;
+        }
+
+        /* Visualization Section */
+        .visualization {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 16px;
+            padding: 40px;
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        .graph-demo {
+            margin: 30px 0;
+            height: 400px;
+            background: #0d1117;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .node {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .node:hover {
+            transform: scale(1.2);
+            z-index: 10;
+        }
+
+        .node-main {
+            background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+            color: white;
+        }
+
+        .node-related {
+            background: #22c55e;
+            color: white;
+        }
+
+        .node-distant {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .connection {
+            position: absolute;
+            height: 2px;
+            background: rgba(124, 58, 237, 0.3);
+            transform-origin: left center;
+            z-index: -1;
+        }
+
+        /* Benefits Section */
+        .benefits {
+            background: linear-gradient(135deg, #161b22 0%, #0d1117 100%);
+            border-radius: 16px;
+            padding: 60px;
+            margin: 60px 0;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: start;
+            margin-bottom: 30px;
+        }
+
+        .benefit-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(124, 58, 237, 0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            flex-shrink: 0;
+            color: #7c3aed;
+        }
+
+        .benefit-content h3 {
+            font-size: 1.25rem;
+            margin-bottom: 8px;
+            color: #f0f6fc;
+        }
+
+        .benefit-content p {
+            color: #8b949e;
+        }
+
+        /* CTA Section */
+        .cta {
+            text-align: center;
+            padding: 100px 0;
+            background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 16px 40px;
+            background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(124, 58, 237, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(124, 58, 237, 0.4);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .benefits {
+                padding: 40px 20px;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .highlight {
+            color: #7c3aed;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1 class="fade-in">Process Mind Technology</h1>
+            <p class="subtitle fade-in" style="animation-delay: 0.2s">
+                Entdecken Sie versteckte Verbindungen zwischen Ihren Videos durch intelligente KI-Analyse
+            </p>
+        </div>
+    </section>
+
+    <!-- Introduction Section -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Die Zukunft der Video-Organisation</h2>
+            <div class="visualization">
+                <p style="font-size: 1.2rem; color: #8b949e; margin-bottom: 30px;">
+                    Process Mind versteht den <span class="highlight">wahren Inhalt</span> Ihrer Videos und zeigt Ihnen, 
+                    wie sie thematisch zusammenhängen - automatisch und intelligent.
+                </p>
+                <div class="graph-demo">
+                    <!-- Simulated Graph -->
+                    <div class="node node-main" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                        Haupt-Video
+                    </div>
+                    <div class="node node-related" style="top: 30%; left: 30%;">
+                        Ähnlich
+                    </div>
+                    <div class="node node-related" style="top: 30%; left: 70%;">
+                        Verwandt
+                    </div>
+                    <div class="node node-distant" style="top: 70%; left: 25%;">
+                        Thematisch
+                    </div>
+                    <div class="node node-distant" style="top: 70%; left: 75%;">
+                        Verbunden
+                    </div>
+                    <div class="connection" style="top: 50%; left: 50%; width: 150px; transform: rotate(-35deg);"></div>
+                    <div class="connection" style="top: 50%; left: 50%; width: 150px; transform: rotate(35deg);"></div>
+                    <div class="connection" style="top: 50%; left: 50%; width: 180px; transform: rotate(-125deg);"></div>
+                    <div class="connection" style="top: 50%; left: 50%; width: 180px; transform: rotate(125deg);"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How it Works Section -->
+    <section class="section" style="background: #0a0c10;">
+        <div class="container">
+            <h2 class="section-title">Wie funktioniert semantische Ähnlichkeit?</h2>
+            
+            <div class="feature-grid">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">📝</div>
+                    <h3 class="feature-title">1. Transkription als Basis</h3>
+                    <p class="feature-description">
+                        Jedes Video wird automatisch transkribiert. Der gesprochene Inhalt bildet die Grundlage 
+                        für das Verständnis des thematischen Kontexts.
+                    </p>
+                </div>
+
+                <div class="feature-card fade-in" style="animation-delay: 0.2s;">
+                    <div class="feature-icon">🧠</div>
+                    <h3 class="feature-title">2. KI-Verständnis</h3>
+                    <p class="feature-description">
+                        Unsere KI analysiert den Inhalt und erstellt einen einzigartigen "Fingerabdruck" 
+                        für jedes Video - eine mathematische Repräsentation des Themas.
+                    </p>
+                </div>
+
+                <div class="feature-card fade-in" style="animation-delay: 0.4s;">
+                    <div class="feature-icon">🔗</div>
+                    <h3 class="feature-title">3. Automatische Vernetzung</h3>
+                    <p class="feature-description">
+                        Videos mit ähnlichen Themen werden automatisch erkannt und verbunden. 
+                        Je ähnlicher der Inhalt, desto stärker die Verbindung im Netzwerk.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Ihre Vorteile</h2>
+            
+            <div class="benefits">
+                <div class="benefit-item fade-in">
+                    <div class="benefit-icon">✨</div>
+                    <div class="benefit-content">
+                        <h3>Versteckte Zusammenhänge entdecken</h3>
+                        <p>Finden Sie thematische Verbindungen zwischen Videos, die Sie selbst übersehen hätten.</p>
+                    </div>
+                </div>
+
+                <div class="benefit-item fade-in" style="animation-delay: 0.2s;">
+                    <div class="benefit-icon">🎯</div>
+                    <div class="benefit-content">
+                        <h3>Keine falschen Verbindungen</h3>
+                        <p>Im Gegensatz zu einfachen Tag-Systemen versteht unsere KI den echten Kontext und vermeidet irreführende Verknüpfungen.</p>
+                    </div>
+                </div>
+
+                <div class="benefit-item fade-in" style="animation-delay: 0.4s;">
+                    <div class="benefit-icon">🚀</div>
+                    <div class="benefit-content">
+                        <h3>Vollautomatisch</h3>
+                        <p>Keine manuelle Kategorisierung nötig. Process Mind erledigt alles für Sie - intelligent und präzise.</p>
+                    </div>
+                </div>
+
+                <div class="benefit-item fade-in" style="animation-delay: 0.6s;">
+                    <div class="benefit-icon">🌐</div>
+                    <div class="benefit-content">
+                        <h3>Sprachunabhängig</h3>
+                        <p>Die semantische Analyse funktioniert über Sprachgrenzen hinweg und erkennt thematische Ähnlichkeiten in verschiedenen Sprachen.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hybrid Graph View Section -->
+    <section class="section" style="background: #0a0c10;">
+        <div class="container">
+            <h2 class="section-title">Hybrid Graph View - Das Beste aus beiden Welten</h2>
+            
+            <div class="visualization">
+                <p style="font-size: 1.2rem; color: #8b949e; margin-bottom: 40px;">
+                    Unser einzigartiger Hybrid-Ansatz kombiniert <span class="highlight">semantische KI-Analyse</span> 
+                    mit <span class="highlight">gewichteten Tags</span> für maximale Präzision.
+                </p>
+
+                <div class="feature-grid" style="margin-top: 0;">
+                    <div class="feature-card">
+                        <h3 class="feature-title">Intelligente Tags</h3>
+                        <p class="feature-description">
+                            Automatisch generierte Tags mit Relevanz-Scores. Wichtige Begriffe werden 
+                            stärker gewichtet, unwichtige automatisch gefiltert.
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h3 class="feature-title">Semantische Tiefe</h3>
+                        <p class="feature-description">
+                            Die KI versteht Kontext und Bedeutung - nicht nur Schlagwörter. 
+                            So werden echte thematische Zusammenhänge sichtbar.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <h2 class="section-title" style="margin-bottom: 20px;">
+                Bereit für intelligente Video-Organisation?
+            </h2>
+            <p style="font-size: 1.2rem; color: #8b949e; margin-bottom: 40px;">
+                Erleben Sie, wie Process Mind Ihre Videos auf eine völlig neue Art vernetzt.
+            </p>
+            <a href="#" class="cta-button">Jetzt starten</a>
+        </div>
+    </section>
+
+    <script>
+        // Add smooth animations on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            el.style.animationPlayState = 'paused';
+            observer.observe(el);
+        });
+
+        // Animate graph connections
+        const connections = document.querySelectorAll('.connection');
+        connections.forEach((conn, index) => {
+            conn.style.animation = `pulse ${3 + index * 0.5}s ease-in-out infinite`;
+        });
+
+        // Interactive nodes
+        const nodes = document.querySelectorAll('.node');
+        nodes.forEach(node => {
+            node.addEventListener('mouseenter', () => {
+                connections.forEach(conn => {
+                    conn.style.background = 'rgba(124, 58, 237, 0.6)';
+                });
+            });
+            
+            node.addEventListener('mouseleave', () => {
+                connections.forEach(conn => {
+                    conn.style.background = 'rgba(124, 58, 237, 0.3)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

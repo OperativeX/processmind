@@ -1,0 +1,161 @@
+version: '3.8'
+
+services:
+  # Backend API Service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: production
+    container_name: processlink-backend
+    restart: unless-stopped
+    ports:
+      - "${BACKEND_PORT:-5000}:5000"
+    environment:
+      # Core settings
+      - NODE_ENV=${NODE_ENV:-production}
+      - PORT=5000
+      
+      # External services
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - MONGODB_URI=${MONGODB_URI}
+      
+      # Required secrets
+      - JWT_SECRET=${JWT_SECRET}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      
+      # Frontend URL for CORS
+      - FRONTEND_URL=http://frontend
+      - CORS_ORIGIN=http://localhost:${FRONTEND_PORT:-5001}
+      
+      # Email configuration
+      - SMTP_HOST=${SMTP_HOST:-smtp.gmail.com}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASS=${SMTP_PASS}
+      
+      # S3 Storage (optional)
+      - S3_ACCESS_KEY=${S3_ACCESS_KEY}
+      - S3_SECRET_KEY=${S3_SECRET_KEY}
+      - S3_ENDPOINT=${S3_ENDPOINT}
+      - S3_BUCKET=${S3_BUCKET}
+      
+      # Stripe (optional)
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      
+      # Misc
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - DISABLE_WORKERS=${DISABLE_WORKERS:-false}
+      
+    volumes:
+      - backend-uploads:/app/uploads
+      - backend-logs:/app/logs
+    depends_on:
+      - redis
+      - mongodb
+    networks:
+      - processlink-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Frontend Service
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # API URL points to backend service
+        - REACT_APP_API_URL=http://localhost:${BACKEND_PORT:-5000}
+        - REACT_APP_MAX_FILE_SIZE=${MAX_FILE_SIZE:-2147483648}
+    container_name: processlink-frontend
+    restart: unless-stopped
+    ports:
+      - "${FRONTEND_PORT:-5001}:80"
+    environment:
+      - NODE_ENV=production
+      - TZ=${TZ:-Europe/Berlin}
+    depends_on:
+      - backend
+    networks:
+      - processlink-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Redis for Queue Management
+  redis:
+    image: redis:7-alpine
+    container_name: processlink-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    networks:
+      - processlink-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # MongoDB Database
+  mongodb:
+    image: mongo:7
+    container_name: processlink-mongodb
+    restart: unless-stopped
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USERNAME:-admin}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGO_DATABASE:-processlink}
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - processlink-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # Optional: Nginx Reverse Proxy (for production)
+  # Uncomment if you want a single entry point
+  # nginx:
+  #   image: nginx:alpine
+  #   container_name: processlink-proxy
+  #   restart: unless-stopped
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+  #     - ./nginx/ssl:/etc/nginx/ssl:ro
+  #   depends_on:
+  #     - frontend
+  #     - backend
+  #   networks:
+  #     - processlink-network
+
+volumes:
+  backend-uploads:
+    driver: local
+  backend-logs:
+    driver: local
+  redis-data:
+    driver: local
+  mongo-data:
+    driver: local
+
+networks:
+  processlink-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
