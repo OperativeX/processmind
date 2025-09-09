@@ -163,6 +163,7 @@ stdout_logfile=/dev/stdout
 stdout_logfile_maxbytes=0
 stderr_logfile=/dev/stderr
 stderr_logfile_maxbytes=0
+redirect_stderr=true
 priority=3
 environment=NODE_ENV="production",PORT="5000",REDIS_URL="redis://127.0.0.1:6379"
 EOF
@@ -228,8 +229,18 @@ export REDIS_URL=redis://127.0.0.1:6379
 echo "[BACKEND] Starting Node.js application..."
 cd /app/backend
 
-# Run with full error output
-exec node src/server.js
+# Check if server.js exists
+if [ ! -f "src/server.js" ]; then
+    echo "[BACKEND] ERROR: src/server.js not found!"
+    ls -la src/
+    exit 1
+fi
+
+# Run with full error output, capturing stderr
+node src/server.js 2>&1 || {
+    echo "[BACKEND] ERROR: Backend failed to start with exit code $?"
+    exit 1
+}
 EOF
 
 RUN chmod +x /app/start-backend.sh
