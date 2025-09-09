@@ -54,8 +54,7 @@ Thumbs.db
 *~
 
 # Docker
-.dockerignore
-Dockerfile
+# .dockerignore und Dockerfile werden für deployment benötigt
 
 # Testing
 /coverage

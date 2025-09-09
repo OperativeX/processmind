@@ -1,0 +1,64 @@
+# Git files
+.git
+.gitignore
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Node modules
+node_modules/
+*/node_modules/
+
+# Build directories
+frontend/build/
+frontend/dist/
+
+# Log files
+*.log
+logs/
+*/logs/
+
+# Test files
+test/
+tests/
+*.test.js
+*.spec.js
+dev-tools/
+
+# Documentation
+*.md
+docs/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+temp/
+tmp/
+uploads/temp/
+uploads/processed/
+
+# Docker files
+docker-compose*.yml
+Dockerfile*
+.dockerignore
+
+# PM2 files
+ecosystem.config.js
+
+# Other
+*.odt
+*.rtf
+test.mp4
+test_audio.wav
+test-videos/
+test-results/
