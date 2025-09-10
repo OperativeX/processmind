@@ -7,7 +7,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
       target: production
-    container_name: processlink-backend
+    # container_name wird von Coolify überschrieben
     restart: unless-stopped
     ports:
       - "${BACKEND_PORT:-5000}:5000"
@@ -17,7 +17,8 @@ services:
       - PORT=5000
       
       # External services
-      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      # Service-Name 'redis' funktioniert im Docker Network
+      - REDIS_URL=redis://redis:6379
       - MONGODB_URI=${MONGODB_URI}
       
       # Required secrets
@@ -70,7 +71,7 @@ services:
         # API URL points to backend service
         - REACT_APP_API_URL=http://localhost:${BACKEND_PORT:-5000}
         - REACT_APP_MAX_FILE_SIZE=${MAX_FILE_SIZE:-2147483648}
-    container_name: processlink-frontend
+    # container_name wird von Coolify überschrieben
     restart: unless-stopped
     ports:
       - "${FRONTEND_PORT:-5001}:80"
@@ -91,7 +92,8 @@ services:
   # Redis for Queue Management
   redis:
     image: redis:7-alpine
-    container_name: processlink-redis
+    # Coolify überschreibt container_name, daher nutzen wir Service-Name
+    # container_name: processlink-redis
     restart: unless-stopped
     command: redis-server --appendonly yes
     volumes:
@@ -130,7 +132,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
       target: production
-    container_name: processlink-worker
+    # container_name wird von Coolify überschrieben
     restart: unless-stopped
     command: npm run worker
     environment:
@@ -138,7 +140,8 @@ services:
       - NODE_ENV=${NODE_ENV:-production}
       
       # External services
-      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      # Service-Name 'redis' funktioniert im Docker Network
+      - REDIS_URL=redis://redis:6379
       - MONGODB_URI=${MONGODB_URI}
       
       # Required secrets
