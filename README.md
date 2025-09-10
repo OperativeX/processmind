@@ -1,86 +1,182 @@
-# ProcessLink
+# ProcessMind
 
-Eine SaaS-Anwendung zur automatisierten Verarbeitung von Videos mit KI-gestützter Transkription und Analyse.
+ProcessMind ist eine KI-gestützte Video-Processing und Transkriptions-Plattform mit Multi-Tenant-Architektur.
 
-## Features
+## 🚀 Features
 
-- 🎥 **Video-Upload & Komprimierung** - Automatische H.265 Komprimierung auf Full HD
-- 🎤 **AI-Transkription** - OpenAI Whisper API mit Zeitstempeln
-- 🏷️ **Automatische Tags** - KI-generierte Tags für bessere Auffindbarkeit
-- ✅ **Todo-Listen** - Automatisch erstellte Aufgabenlisten aus Video-Inhalten
-- 🌐 **Graph-Visualisierung** - Obsidian-inspirierte Wolken-Ansicht mit Tag-Verbindungen
-- 👥 **Multi-Tenant** - SaaS-ready Architektur
-- 🌙 **Dark Theme** - Obsidian.md-inspiriertes Design
+- **Video-Upload & Komprimierung**: Automatische Optimierung mit FFmpeg
+- **KI-Transkription**: OpenAI Whisper API Integration
+- **Smart Tags & Todo-Listen**: Automatisch generiert durch ChatGPT
+- **Multi-Tenant SaaS**: Vollständige Mandantentrennung
+- **Team Collaboration**: Gemeinsame Arbeitsbereiche
+- **Public Sharing**: Teilen von Prozessen via Links
 
-## Tech Stack
+## 📋 Voraussetzungen
 
-### Backend
-- Node.js + Express.js
-- MongoDB (Mongoose ODM)
-- Redis + BullMQ (Background Jobs)
-- FFmpeg (Video Processing)
-- OpenAI API (Whisper + ChatGPT)
-- JWT Authentication
+- Node.js 18+
+- MongoDB (lokal oder Atlas)
+- Redis
+- FFmpeg
+- PM2 (global installiert)
+- Nginx (für Production)
 
-### Frontend
-- React 18 + TypeScript
-- Material-UI (Obsidian Theme)
-- React Query + Context API
-- D3.js (Graph Visualization)
-- React Router v6
+## 🛠️ Installation
 
-## Schnellstart
+### 1. Repository klonen
 
-### Voraussetzungen
 ```bash
-# Node.js 18+
-node --version
-
-# MongoDB (lokal oder Cloud)
-mongod --version
-
-# Redis
-redis-server --version
-
-# FFmpeg
-ffmpeg -version
+git clone https://github.com/yourusername/process-mind.git
+cd process-mind
 ```
 
-### Installation
+### 2. Dependencies installieren
 
-1. **Repository klonen**
 ```bash
-git clone <repository-url>
-cd ProcessLink
+npm install  # Installiert Backend & Frontend
 ```
 
-2. **Environment Setup**
-```bash
-cp .env.example .env
-# .env Datei mit Ihren API-Keys ausfüllen
-```
+### 3. Environment konfigurieren
 
-3. **Backend Setup**
+Backend:
 ```bash
 cd backend
-npm install
-npm run dev
+cp .env.example .env
+# Bearbeite .env mit deinen Werten
 ```
 
-4. **Frontend Setup** (neues Terminal)
+Frontend:
 ```bash
-cd frontend
-npm install
-npm start
+cd ../frontend
+cp .env.example .env.local
+# Bearbeite .env.local mit deinen Werten
 ```
 
-5. **Services starten**
+### 4. MongoDB & Redis starten
+
 ```bash
-# MongoDB
+# MongoDB (wenn lokal)
 mongod
 
 # Redis
 redis-server
+```
+
+## 🚀 Entwicklung
+
+```bash
+# Alle Services mit PM2 starten
+npm run dev
+
+# Oder einzeln:
+cd backend && npm run dev
+cd frontend && npm start
+```
+
+## 🏭 Production Deployment
+
+### Vorbereitung auf Hetzner VPS
+
+```bash
+# System Setup (Ubuntu 22.04)
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y nodejs npm nginx certbot python3-certbot-nginx redis-server ffmpeg git
+
+# PM2 global installieren
+sudo npm install -g pm2
+
+# MongoDB Atlas verwenden oder lokal installieren
+```
+
+### Deployment
+
+1. **Code auf Server**:
+```bash
+cd /home/deploy
+git clone https://github.com/yourusername/process-mind.git
+cd process-mind
+npm install
+```
+
+2. **Environment einrichten**:
+```bash
+cd backend
+cp .env.example .env
+nano .env  # Produktions-Werte eintragen
+```
+
+3. **Frontend bauen**:
+```bash
+cd ../frontend
+npm run build
+```
+
+4. **Nginx konfigurieren**:
+```nginx
+server {
+    listen 80;
+    server_name yourdomain.com;
+
+    # Frontend
+    location / {
+        root /home/deploy/process-mind/frontend/build;
+        try_files $uri /index.html;
+    }
+
+    # Backend API
+    location /api {
+        proxy_pass http://localhost:5000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+```
+
+5. **SSL einrichten**:
+```bash
+sudo certbot --nginx -d yourdomain.com
+```
+
+6. **PM2 starten**:
+```bash
+cd /home/deploy/process-mind
+pm2 start ecosystem.config.js --env production
+pm2 save
+pm2 startup
+```
+
+## 📦 PM2 Commands
+
+```bash
+# Status anzeigen
+npm run status
+
+# Logs anzeigen
+npm run logs
+
+# Restart (zero-downtime)
+npm run restart
+
+# Stop
+npm run stop
+```
+
+## 🔄 Updates deployen
+
+Updates werden automatisch via GitHub Actions deployed:
+
+1. Code zu `main` branch pushen
+2. GitHub Action triggert automatisches Deployment
+3. Zero-downtime reload via PM2
+
+Manuelles Update:
+```bash
+git pull origin main
+cd backend && npm install
+cd ../frontend && npm install && npm run build
+pm2 reload ecosystem.config.js
 ```
 
 ## API Dokumentation

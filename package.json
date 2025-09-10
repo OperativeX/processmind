@@ -1,0 +1,46 @@
+{
+  "name": "processmind",
+  "version": "1.0.0",
+  "description": "ProcessMind - AI-powered video processing and transcription platform",
+  "private": true,
+  "scripts": {
+    "install": "npm install --prefix backend && npm install --prefix frontend",
+    "dev": "pm2 start ecosystem.config.js --env development",
+    "start": "pm2 start ecosystem.config.js --env production",
+    "stop": "pm2 stop all",
+    "restart": "pm2 reload ecosystem.config.js --env production",
+    "logs": "pm2 logs",
+    "status": "pm2 list",
+    "build": "npm run build:frontend",
+    "build:frontend": "cd frontend && npm run build",
+    "deploy": "pm2 deploy production",
+    "deploy:setup": "pm2 deploy production setup",
+    "clean": "rm -rf backend/node_modules frontend/node_modules logs/*.log",
+    "lint": "npm run lint:backend && npm run lint:frontend",
+    "lint:backend": "cd backend && npm run lint",
+    "lint:frontend": "cd frontend && npm run lint",
+    "test": "npm run test:backend",
+    "test:backend": "cd backend && npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/process-mind.git"
+  },
+  "keywords": [
+    "video-processing",
+    "transcription",
+    "ai",
+    "saas",
+    "multi-tenant"
+  ],
+  "author": "ProcessMind Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yourusername/process-mind/issues"
+  },
+  "homepage": "https://github.com/yourusername/process-mind#readme",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}

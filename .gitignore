@@ -15,6 +15,8 @@ node_modules/
 
 # Logs
 logs/
+backend/logs/
+frontend/logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -33,6 +35,8 @@ coverage/
 .nyc_output
 
 # Uploads and temporary files
+backend/uploads/
+backend/temp/
 uploads/
 temp/
 *.tmp
@@ -53,8 +57,10 @@ Thumbs.db
 *.swo
 *~
 
-# Docker
-# .dockerignore und Dockerfile werden für deployment benötigt
+# PM2
+.pm2/
+pids/
+pm2-*.log
 
 # Testing
 /coverage
