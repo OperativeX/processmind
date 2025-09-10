@@ -109,7 +109,12 @@ const connectRedis = async () => {
     return redisClient;
 
   } catch (error) {
-    logger.error('Error connecting to Redis:', error.message);
+    logger.error('Error connecting to Redis:', {
+      message: error.message,
+      url: redisUrl,
+      nodeEnv: process.env.NODE_ENV,
+      stack: error.stack
+    });
     process.exit(1);
   }
 };
