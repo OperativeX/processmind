@@ -9,7 +9,7 @@ const path = require('path');
 class LocalCleanupWorker {
   constructor() {
     // Parse Redis URL if provided, otherwise use defaults
-    const redisUrl = process.env.REDIS_URL || (process.env.NODE_ENV === 'production' ? 'redis://redis:6379' : 'redis://localhost:6379');
+    const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
     let connectionConfig;
     
     if (redisUrl.startsWith('redis://')) {

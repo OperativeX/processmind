@@ -35,10 +35,10 @@ const validateEnvironment = () => {
     }
   }
   
-  // Force Redis URL in production if not set correctly
-  if (process.env.NODE_ENV === 'production' && !process.env.REDIS_URL) {
-    logger.warn('REDIS_URL not set in production, using default docker network URL');
-    process.env.REDIS_URL = 'redis://redis:6379';
+  // Set default Redis URL if not provided
+  if (!process.env.REDIS_URL) {
+    logger.info('REDIS_URL not set, using default localhost URL');
+    process.env.REDIS_URL = 'redis://localhost:6379';
   }
   
   logger.info('Environment validation completed successfully');

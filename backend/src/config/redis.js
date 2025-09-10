@@ -24,11 +24,8 @@ class CacheEntry {
 // Connect to Redis (with cluster support)
 const connectRedis = async () => {
   try {
-    // In Docker/Production, use 'redis' as hostname instead of localhost
-    const defaultRedisUrl = process.env.NODE_ENV === 'production' 
-      ? 'redis://redis:6379' 
-      : 'redis://localhost:6379';
-    const redisUrl = process.env.REDIS_URL || defaultRedisUrl;
+    // Default to localhost for both development and production (PM2 deployment)
+    const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
     const useCluster = process.env.REDIS_CLUSTER === 'true';
     
     if (useCluster) {

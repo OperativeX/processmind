@@ -25,7 +25,7 @@ const redisUrl = process.env.REDIS_URL;
 let redisConnection;
 
 if (redisUrl) {
-  // Parse Redis URL (e.g., redis://redis:6379)
+  // Parse Redis URL
   const url = new URL(redisUrl);
   redisConnection = {
     host: url.hostname,
@@ -36,7 +36,7 @@ if (redisUrl) {
 } else {
   // Fallback to individual settings
   redisConnection = {
-    host: process.env.REDIS_HOST || (process.env.NODE_ENV === 'production' ? 'redis' : 'localhost'),
+    host: process.env.REDIS_HOST || 'localhost',
     port: parseInt(process.env.REDIS_PORT) || 6379,
     db: parseInt(process.env.REDIS_DB) || 0
   };
