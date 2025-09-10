@@ -1,5 +1,4 @@
 const { Worker } = require('bullmq');
-const { queueConnection } = require('../config/redis');
 const { jobTypes } = require('../config/bullmq');
 const s3Service = require('../services/s3Service');
 const storageTrackingService = require('../services/storageTrackingService');
@@ -9,11 +8,31 @@ const fs = require('fs');
 
 class S3UploadWorker {
   constructor() {
+    // Parse Redis URL if provided, otherwise use defaults
+    const redisUrl = process.env.REDIS_URL || (process.env.NODE_ENV === 'production' ? 'redis://redis:6379' : 'redis://localhost:6379');
+    let connectionConfig;
+    
+    if (redisUrl.startsWith('redis://')) {
+      const url = new URL(redisUrl);
+      connectionConfig = {
+        host: url.hostname,
+        port: parseInt(url.port) || 6379,
+        password: url.password || undefined,
+        db: parseInt(url.pathname.substring(1)) || 0
+      };
+    } else {
+      connectionConfig = {
+        host: process.env.REDIS_HOST || (process.env.NODE_ENV === 'production' ? 'redis' : 'localhost'),
+        port: parseInt(process.env.REDIS_PORT) || 6379,
+        db: parseInt(process.env.REDIS_DB) || 0
+      };
+    }
+
     this.worker = new Worker(
       's3-upload',
       this.processJob.bind(this),
       {
-        ...queueConnection,
+        connection: connectionConfig,
         concurrency: 5, // Allow 5 parallel S3 uploads
         maxStalledCount: 3,
         stalledInterval: 30000
