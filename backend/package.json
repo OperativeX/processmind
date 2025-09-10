@@ -10,6 +10,7 @@
     "stop:pm2": "pm2 stop all",
     "restart:pm2": "pm2 restart all",
     "dev": "nodemon src/server.js",
+    "worker": "node src/workers/queue-worker-process.js",
     "docker:build": "docker build -t processmind-backend .",
     "docker:run": "docker run -p 5000:5000 --env-file .env processmind-backend",
     "health:check": "node -e \"require('http').get('http://localhost:5000/health', (res) => { console.log('Health:', res.statusCode); process.exit(res.statusCode === 200 ? 0 : 1); })\"",
