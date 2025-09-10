@@ -151,7 +151,9 @@ class S3UploadWorker {
 
       // Trigger cleanup job after successful S3 upload
       const { Queue } = require('bullmq');
-      const cleanupQueue = new Queue('cleanup', queueConnection);
+      const cleanupQueue = new Queue('cleanup', {
+        connection: connectionConfig
+      });
       
       // Build paths to clean up comprehensively
       const path = require('path');
