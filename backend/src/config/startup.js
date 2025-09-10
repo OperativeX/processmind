@@ -21,7 +21,6 @@ const validateEnvironment = () => {
   // Check critical environment variables for production
   if (process.env.NODE_ENV === 'production') {
     const required = [
-      'REDIS_URL',
       'MONGODB_URI',
       'JWT_SECRET',
       'OPENAI_API_KEY'
