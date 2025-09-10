@@ -14,12 +14,29 @@ const defaultJobOptions = {
 };
 
 // BullMQ connection configuration - uses ioredis format
-const queueConnection = {
-  connection: {
-    host: process.env.REDIS_HOST || 'localhost',
+const redisUrl = process.env.REDIS_URL;
+let connectionConfig;
+
+if (redisUrl) {
+  // Parse Redis URL (e.g., redis://redis:6379)
+  const url = new URL(redisUrl);
+  connectionConfig = {
+    host: url.hostname,
+    port: parseInt(url.port) || 6379,
+    password: url.password || undefined,
+    db: parseInt(url.pathname.substring(1)) || 0
+  };
+} else {
+  // Fallback to individual settings
+  connectionConfig = {
+    host: process.env.REDIS_HOST || (process.env.NODE_ENV === 'production' ? 'redis' : 'localhost'),
     port: parseInt(process.env.REDIS_PORT) || 6379,
-    db: parseInt(process.env.REDIS_DB) || 0,
-  }
+    db: parseInt(process.env.REDIS_DB) || 0
+  };
+}
+
+const queueConnection = {
+  connection: connectionConfig
 };
 
 // Define queues

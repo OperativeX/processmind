@@ -19,12 +19,31 @@ const { Process } = require('../models');
 
 // Worker configuration
 const isDevelopment = process.env.NODE_ENV === 'development';
-const workerConfig = {
-  connection: {
-    host: process.env.REDIS_HOST || 'localhost',
+
+// Parse Redis URL if provided, otherwise use individual settings
+const redisUrl = process.env.REDIS_URL;
+let redisConnection;
+
+if (redisUrl) {
+  // Parse Redis URL (e.g., redis://redis:6379)
+  const url = new URL(redisUrl);
+  redisConnection = {
+    host: url.hostname,
+    port: parseInt(url.port) || 6379,
+    password: url.password || undefined,
+    db: parseInt(url.pathname.substring(1)) || 0
+  };
+} else {
+  // Fallback to individual settings
+  redisConnection = {
+    host: process.env.REDIS_HOST || (process.env.NODE_ENV === 'production' ? 'redis' : 'localhost'),
     port: parseInt(process.env.REDIS_PORT) || 6379,
     db: parseInt(process.env.REDIS_DB) || 0
-  },
+  };
+}
+
+const workerConfig = {
+  connection: redisConnection,
   concurrency: isDevelopment ? 1 : 3, // Single job in dev, 3 in production
   removeOnComplete: { count: 10 },
   removeOnFail: { count: 50 }
@@ -34,7 +53,8 @@ const workerConfig = {
 logger.info('🚀 Initializing queue workers...', {
   environment: process.env.NODE_ENV,
   concurrency: workerConfig.concurrency,
-  redis: `${workerConfig.connection.host}:${workerConfig.connection.port}`
+  redis: `${workerConfig.connection.host}:${workerConfig.connection.port}`,
+  redisUrl: redisUrl || 'using fallback'
 });
 
 // Video Processing Worker
