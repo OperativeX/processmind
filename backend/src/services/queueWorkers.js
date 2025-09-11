@@ -596,17 +596,7 @@ async function handleVideoCompressionComplete(processDoc, result) {
     
     // Don't update progress here - will be done after AI analysis
     
-    await processDoc.save();
-    
-    logger.info(`Video file validated and saved for process ${processDoc._id}`, {
-      path: result.outputPath,
-      size: result.compressedSize,
-      validated: true,
-      skippedCompression: result.skippedCompression || false,
-      compressionRatio: result.compressionRatio
-    });
-
-    // Start S3 upload job now that video compression is complete
+    // Start S3 upload job BEFORE saving to avoid race condition
     const { queueMethods } = require('../config/bullmq');
     const s3UploadJob = await queueMethods.addS3UploadJob(
       processDoc._id.toString(),
@@ -618,7 +608,17 @@ async function handleVideoCompressionComplete(processDoc, result) {
     // Update process with S3 upload job ID
     processDoc.jobs = processDoc.jobs || {};
     processDoc.jobs.s3Upload = s3UploadJob.id;
+    
+    // NOW save everything at once
     await processDoc.save();
+    
+    logger.info(`Video file validated and saved for process ${processDoc._id}`, {
+      path: result.outputPath,
+      size: result.compressedSize,
+      validated: true,
+      skippedCompression: result.skippedCompression || false,
+      compressionRatio: result.compressionRatio
+    });
 
     logger.info(`S3 upload job started for process ${processDoc._id}`, {
       jobId: s3UploadJob.id,
@@ -1067,8 +1067,9 @@ async function finalizeProcessing(processDoc) {
   if (hasS3UploadJob) {
     // Check if S3 upload is still running
     const { Queue } = require('bullmq');
-    const { queueConnection } = require('../config/redis');
-    const s3UploadQueue = new Queue('s3-upload', queueConnection);
+    const s3UploadQueue = new Queue('s3-upload', {
+      connection: redisConnection
+    });
     
     try {
       const s3Job = await s3UploadQueue.getJob(processDoc.jobs.s3Upload);
@@ -1082,6 +1083,7 @@ async function finalizeProcessing(processDoc) {
           logger.info(`S3 upload still in progress for process ${processDoc._id}, waiting for completion`);
           
           // Update status to show S3 upload is happening
+          processDoc.status = 'uploading';
           processDoc.processingDetails = 'uploading_to_s3';
           await processDoc.updateProgress(91, 'uploading_to_s3', 'Video wird zu S3 hochgeladen...');
           await processDoc.save();

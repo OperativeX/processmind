@@ -115,6 +115,16 @@ function registerScheduledTasks() {
     description: 'Deep cleanup of all temporary and orphaned files at midnight'
   });
   
+  // Check for stuck processes every 30 minutes
+  scheduledTasks.set('stuck-process-check', {
+    schedule: '*/30 * * * *', // Every 30 minutes
+    task: cron.schedule('*/30 * * * *', checkStuckProcesses, {
+      scheduled: true,
+      timezone: process.env.TZ || 'UTC'
+    }),
+    description: 'Check and fix processes stuck in processing state'
+  });
+  
   logger.info('Scheduled tasks registered:', {
     tasks: Array.from(scheduledTasks.entries()).map(([name, task]) => ({
       name,
@@ -605,6 +615,74 @@ async function cleanupStalledProcesses(maxAge, stats) {
   } catch (error) {
     logger.error('Error cleaning stalled processes:', error);
     stats.errors.push({ type: 'stalled_processes', error: error.message });
+  }
+}
+
+/**
+ * Check for stuck processes and mark them as failed
+ */
+async function checkStuckProcesses() {
+  const taskStart = Date.now();
+  logger.info('Checking for stuck processes...');
+  
+  try {
+    const { Process } = require('../models');
+    const maxProcessingTime = parseInt(process.env.MAX_PROCESSING_TIME_MINUTES) || 30; // Default 30 minutes
+    const cutoffTime = new Date(Date.now() - maxProcessingTime * 60 * 1000);
+    
+    // Find processes that have been stuck for too long
+    const stuckProcesses = await Process.find({
+      status: { $in: ['uploading', 'processing_media', 'transcribing', 'analyzing', 'finalizing'] },
+      updatedAt: { $lt: cutoffTime },
+      isDeleted: false
+    });
+    
+    logger.info(`Found ${stuckProcesses.length} stuck processes`);
+    
+    for (const process of stuckProcesses) {
+      // Calculate how long it's been stuck
+      const stuckMinutes = Math.round((Date.now() - process.updatedAt.getTime()) / 1000 / 60);
+      
+      // Add error to processing errors
+      process.processingErrors.push({
+        step: process.progress?.currentStep || 'unknown',
+        message: `Process stuck for ${stuckMinutes} minutes - marking as failed`,
+        details: {
+          lastStatus: process.status,
+          lastProgress: process.progress?.percentage,
+          lastStep: process.progress?.currentStep,
+          stuckDuration: `${stuckMinutes} minutes`
+        },
+        timestamp: new Date()
+      });
+      
+      // Mark as failed
+      process.status = 'failed';
+      process.progress = {
+        percentage: process.progress?.percentage || 0,
+        currentStep: 'failed',
+        stepDetails: `Process timed out after ${stuckMinutes} minutes`,
+        estimatedTimeRemaining: 0
+      };
+      
+      await process.save();
+      
+      logger.warn(`Marked stuck process as failed`, {
+        processId: process._id,
+        tenantId: process.tenantId,
+        originalStatus: process.status,
+        stuckMinutes,
+        lastUpdate: process.updatedAt
+      });
+    }
+    
+    logger.info('Stuck process check completed', {
+      processesChecked: stuckProcesses.length,
+      duration: Date.now() - taskStart
+    });
+    
+  } catch (error) {
+    logger.error('Error checking stuck processes:', error);
   }
 }
 

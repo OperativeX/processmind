@@ -28,6 +28,8 @@ class S3UploadWorker {
       };
     }
 
+    this.connectionConfig = connectionConfig; // Save for later use
+    
     this.worker = new Worker(
       's3-upload',
       this.processJob.bind(this),
@@ -152,7 +154,7 @@ class S3UploadWorker {
       // Trigger cleanup job after successful S3 upload
       const { Queue } = require('bullmq');
       const cleanupQueue = new Queue('cleanup', {
-        connection: connectionConfig
+        connection: this.connectionConfig
       });
       
       // Build paths to clean up comprehensively

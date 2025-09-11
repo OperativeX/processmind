@@ -1,3 +1,6 @@
+// Load environment variables first
+require('dotenv').config();
+
 const { Worker } = require('bullmq');
 const { jobTypes } = require('../config/bullmq');
 const fileService = require('../services/fileService');
