@@ -1,6 +1,7 @@
 const axios = require('axios');
 const logger = require('../utils/logger');
 
+
 class AIService {
   constructor() {
     this.openaiAPIKey = process.env.OPENAI_API_KEY;
