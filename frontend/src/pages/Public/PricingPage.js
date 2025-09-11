@@ -130,6 +130,7 @@ const PricingPage = () => {
                     borderRadius: 2,
                     transition: 'all 0.3s ease',
                     transform: plan.popular ? 'scale(1.05)' : 'scale(1)',
+                    overflow: 'visible',
                     '&:hover': {
                       borderColor: 'primary.main',
                       boxShadow: `0 20px 40px ${alpha(theme.palette.primary.main, 0.15)}`,
