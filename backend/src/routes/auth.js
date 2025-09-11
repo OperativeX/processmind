@@ -70,6 +70,11 @@ router.put('/profile', authMiddleware, authController.updateProfile);
 // @access  Private
 router.put('/change-password', authMiddleware, validateAuth.changePassword, authController.changePassword);
 
+// @route   DELETE /api/v1/auth/account
+// @desc    Delete account (owner only)
+// @access  Private
+router.delete('/account', authMiddleware, authController.deleteAccount);
+
 // @route   GET /api/v1/auth/invitation/:token
 // @desc    Get invitation details
 // @access  Public

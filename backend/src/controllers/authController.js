@@ -966,6 +966,106 @@ class AuthController {
       next(error);
     }
   }
+
+  // @desc    Delete account (owner only)
+  // @route   DELETE /api/v1/auth/account
+  // @access  Private
+  async deleteAccount(req, res, next) {
+    try {
+      const { password } = req.body;
+
+      if (!password) {
+        return res.status(400).json({
+          success: false,
+          message: 'Password is required to delete account'
+        });
+      }
+
+      // Get user with password
+      const user = await User.findById(req.user.id).select('+password');
+      
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: 'User not found'
+        });
+      }
+
+      // Only owners can delete their account
+      if (user.role !== 'owner') {
+        return res.status(403).json({
+          success: false,
+          message: 'Only account owners can delete their account. Team members should contact the account owner.'
+        });
+      }
+
+      // Verify password
+      const isPasswordMatch = await user.comparePassword(password);
+      if (!isPasswordMatch) {
+        return res.status(401).json({
+          success: false,
+          message: 'Invalid password'
+        });
+      }
+
+      // Get tenant
+      const tenant = await Tenant.findById(user.tenantId);
+      if (!tenant) {
+        return res.status(404).json({
+          success: false,
+          message: 'Tenant not found'
+        });
+      }
+
+      logger.info('Starting account deletion process', {
+        userId: user._id,
+        tenantId: tenant._id,
+        email: user.email
+      });
+
+      // Delete all processes from MongoDB
+      const Process = require('../models/Process');
+      await Process.deleteMany({ tenantId: tenant._id });
+      logger.info('Deleted all processes from database', { tenantId: tenant._id });
+
+      // Delete all files from S3
+      const s3Service = require('../services/s3Service');
+      try {
+        await s3Service.deleteTenantFiles(tenant._id.toString());
+        logger.info('Deleted all files from S3', { tenantId: tenant._id });
+      } catch (s3Error) {
+        logger.error('Failed to delete S3 files', { 
+          tenantId: tenant._id, 
+          error: s3Error.message 
+        });
+        // Continue with deletion even if S3 fails
+      }
+
+      // Delete all team members (other users in the tenant)
+      await User.deleteMany({ 
+        tenantId: tenant._id,
+        _id: { $ne: user._id } // Don't delete current user yet
+      });
+      logger.info('Deleted all team members', { tenantId: tenant._id });
+
+      // Delete tenant
+      await Tenant.findByIdAndDelete(tenant._id);
+      logger.info('Deleted tenant', { tenantId: tenant._id });
+
+      // Finally, delete the user
+      await User.findByIdAndDelete(user._id);
+      logger.info('Deleted user account', { userId: user._id, email: user.email });
+
+      res.status(200).json({
+        success: true,
+        message: 'Account and all associated data have been permanently deleted'
+      });
+
+    } catch (error) {
+      logger.error('Delete account error:', error);
+      next(error);
+    }
+  }
 }
 
 module.exports = new AuthController();

@@ -23,9 +23,11 @@ import {
 import { useAuth } from '../../contexts/AuthContext';
 import TeamManagementPage from '../Team/TeamManagementPage';
 import BillingPage from '../Billing/BillingPage';
+import DeleteAccountDialog from '../../components/DeleteAccountDialog';
 
 const SettingsPage = () => {
   const [activeTab, setActiveTab] = useState(0);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const { user, tenant, refreshUserData } = useAuth();
   
   // Force refresh user data on mount
@@ -160,12 +162,28 @@ const SettingsPage = () => {
             <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
               Danger Zone
             </Typography>
-            <Button variant="outlined" color="error">
+            <Button 
+              variant="outlined" 
+              color="error"
+              onClick={() => setDeleteDialogOpen(true)}
+              disabled={user?.role !== 'owner'}
+            >
               Delete Account
             </Button>
+            {user?.role !== 'owner' && (
+              <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
+                Only account owners can delete accounts
+              </Typography>
+            )}
           </CardContent>
         </Card>
       )}
+
+      {/* Delete Account Dialog */}
+      <DeleteAccountDialog 
+        open={deleteDialogOpen} 
+        onClose={() => setDeleteDialogOpen(false)} 
+      />
 
       {/* Billing Tab */}
       {activeTab === (canManageTeam ? 3 : 2) && (
