@@ -1,13 +1,11 @@
+// Load environment variables first
+require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
 const rateLimit = require('express-rate-limit');
-
-// Only load .env in development - in production use Docker env vars
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config();
-}
 
 const connectDB = require('./config/database');
 const { connectRedis } = require('./config/redis');

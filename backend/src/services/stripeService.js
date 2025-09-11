@@ -1,15 +1,27 @@
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+// Lazy loading of stripe to prevent startup errors
+let stripe;
+
 const { Tenant, User } = require('../models');
 const logger = require('../utils/logger');
 
 class StripeService {
   constructor() {
-    this.stripe = stripe;
+    this.stripe = null;
     this.isConfigured = false;
     
+    // Only initialize Stripe if we have a valid key
     if (process.env.STRIPE_SECRET_KEY && !process.env.STRIPE_SECRET_KEY.includes('your_stripe_secret_key')) {
-      this.isConfigured = true;
-      logger.info('Stripe initialized successfully');
+      try {
+        if (!stripe) {
+          stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+        }
+        this.stripe = stripe;
+        this.isConfigured = true;
+        logger.info('Stripe initialized successfully');
+      } catch (error) {
+        logger.error('Failed to initialize Stripe:', error);
+        logger.warn('Server will continue without Stripe functionality');
+      }
     } else {
       logger.warn('Stripe not initialized - missing or placeholder API key');
     }
@@ -49,7 +61,7 @@ class StripeService {
       // For Pro plan, start with 1 license
       const initialLicenses = 1;
       
-      const session = await stripe.checkout.sessions.create({
+      const session = await this.stripe.checkout.sessions.create({
         customer: tenant.billing.stripeCustomerId,
         payment_method_types: ['card'],
         mode: 'subscription',
@@ -182,7 +194,7 @@ class StripeService {
         quantity: quantity
       }];
 
-      const session = await stripe.checkout.sessions.create({
+      const session = await this.stripe.checkout.sessions.create({
         customer: tenant.billing.stripeCustomerId,
         payment_method_types: ['card'],
         mode: 'subscription',

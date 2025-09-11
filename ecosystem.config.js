@@ -9,7 +9,7 @@ module.exports = {
       instance_var: 'INSTANCE_ID',
       watch: false,
       max_memory_restart: '1G',
-      cwd: './backend',
+      cwd: process.env.PM2_BACKEND_CWD || './backend',
       env: {
         NODE_ENV: 'production',
         PORT: 5000,
@@ -42,7 +42,7 @@ module.exports = {
       exec_mode: 'fork',
       watch: false,
       max_memory_restart: '2G',
-      cwd: './backend',
+      cwd: process.env.PM2_BACKEND_CWD || './backend',
       env: {
         NODE_ENV: 'production',
         WORKER_TYPE: 'queue'
@@ -70,7 +70,7 @@ module.exports = {
       exec_mode: 'fork',
       watch: false,
       max_memory_restart: '3G',
-      cwd: './backend',
+      cwd: process.env.PM2_BACKEND_CWD || './backend',
       env: {
         NODE_ENV: 'production',
         WORKER_TYPE: 'heavy',
@@ -100,7 +100,7 @@ module.exports = {
       exec_mode: 'fork',
       watch: false,
       max_memory_restart: '512M',
-      cwd: './backend',
+      cwd: process.env.PM2_BACKEND_CWD || './backend',
       env: {
         NODE_ENV: 'production',
         WORKER_TYPE: 'scheduler'
