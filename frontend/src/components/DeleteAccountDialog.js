@@ -43,7 +43,7 @@ const DeleteAccountDialog = ({ open, onClose }) => {
     setError('');
 
     try {
-      const response = await api.delete('/api/v1/auth/account', {
+      const response = await api.delete('/auth/account', {
         data: { password }
       });
 
