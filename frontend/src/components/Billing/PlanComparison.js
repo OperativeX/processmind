@@ -201,6 +201,7 @@ const PlanComparison = ({ currentPlan, onUpgrade, tenantId }) => {
               border: '2px solid',
               borderColor: 'success.main',
               position: 'relative',
+              overflow: 'visible',
               background: 'linear-gradient(135deg, rgba(46, 125, 50, 0.05) 0%, rgba(46, 125, 50, 0.02) 100%)'
             }}
           >
