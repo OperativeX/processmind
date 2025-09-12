@@ -3,21 +3,62 @@ const router = express.Router({ mergeParams: true }); // mergeParams to access t
 const processController = require('../controllers/processController');
 const { validateProcess } = require('../middleware/validation');
 const uploadMiddleware = require('../middleware/uploadMiddleware');
+const streamingUploadMiddleware = require('../middleware/streamingUploadMiddleware');
 const { checkUploadLimits, processUploadAlerts, checkStorageLimits } = require('../middleware/uploadLimitMiddleware');
 const videoTokenService = require('../services/videoTokenService');
+const { 
+  handleChunkUpload, 
+  validateChunkUpload, 
+  processChunk 
+} = require('../middleware/chunkUploadMiddleware');
+const chunkFinalizationMiddleware = require('../middleware/chunkFinalizationMiddleware');
 
 // @route   GET /api/v1/tenants/:tenantId/processes
 // @desc    Get all processes for tenant with optional filtering
 // @access  Private (Tenant)
 router.get('/', (req, res, next) => processController.getProcesses(req, res, next));
 
+// @route   POST /api/v1/tenants/:tenantId/processes/upload-chunk
+// @desc    Upload a single chunk of a video file
+// @access  Private (Tenant)
+router.post('/upload-chunk',
+  handleChunkUpload,
+  validateChunkUpload,
+  processChunk
+);
+
+// @route   POST /api/v1/tenants/:tenantId/processes/finalize-chunked-upload
+// @desc    Finalize a chunked upload
+// @access  Private (Tenant)
+router.post('/finalize-chunked-upload',
+  (req, res, next) => processController.finalizeChunkedUpload(req, res, next)
+);
+
 // @route   POST /api/v1/tenants/:tenantId/processes
-// @desc    Upload and create new process
+// @desc    Upload and create new process (supports both direct and chunked uploads)
 // @access  Private (Tenant)
 router.post('/', 
-  checkUploadLimits, // Check limits before upload
-  checkStorageLimits, // Check storage limits
-  uploadMiddleware.single('video'),
+  checkUploadLimits, // Check upload count limits before upload
+  // TODO: Fix chunkFinalizationMiddleware - it consumes the stream for normal uploads
+  // chunkFinalizationMiddleware, // Check for chunk finalization requests
+  streamingUploadMiddleware({ fieldName: 'video' }),
+  // Debug middleware to log state after upload
+  (req, res, next) => {
+    const logger = require('../utils/logger');
+    logger.info('State after streaming upload:', {
+      hasFile: !!req.file,
+      fileSize: req.file?.size,
+      filePath: req.file?.path,
+      hasBody: !!req.body,
+      bodyKeys: req.body ? Object.keys(req.body) : [],
+      processId: req.processId,
+      uploadDir: req.uploadDir,
+      userId: req.user?.id,
+      tenantId: req.params?.tenantId
+    });
+    next();
+  },
+  checkStorageLimits, // Check storage limits AFTER file is uploaded
   validateProcess.create,
   (req, res, next) => processController.createProcess(req, res, next),
   processUploadAlerts // Process alerts after successful upload

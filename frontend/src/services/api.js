@@ -6,7 +6,7 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api
 // Create axios instance
 const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 30000, // 30 seconds timeout
+  timeout: 60000, // 60 seconds timeout for most requests
   headers: {
     'Content-Type': 'application/json',
   },
@@ -181,13 +181,16 @@ export const processAPI = {
   },
 
   createProcess: async (tenantId, formData, onUploadProgress, cancelTokenSource) => {
+    // Handle both cancelToken and custom cancel wrapper
+    const cancelToken = cancelTokenSource?.cancelToken?.token || cancelTokenSource?.token;
+    
     return await api.post(`/tenants/${tenantId}/processes`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
       onUploadProgress,
       timeout: 1800000, // 30 minutes for large file uploads (up to 2GB)
-      cancelToken: cancelTokenSource?.token,
+      cancelToken: cancelToken,
     });
   },
 
@@ -429,10 +432,77 @@ export const publicAPI = {
   },
 };
 
-// File upload helper with cancellation support
+// File upload helper with cancellation support and chunking for large files
 export const uploadFile = async (tenantId, file, onProgress, cancelTokenSource) => {
+  console.log('🔍 uploadFile called with:', {
+    tenantId,
+    fileName: file.name,
+    fileSize: file.size,
+    fileSizeMB: (file.size / 1024 / 1024).toFixed(2) + 'MB',
+    fileType: file.type,
+    hasProgress: !!onProgress,
+    hasCancelToken: !!cancelTokenSource
+  });
+
+  // Import ChunkedUploader
+  const ChunkedUploader = (await import('../utils/ChunkedUploader')).default;
+
+  // Use chunked upload for files over 500MB (temporarily increased to disable for most files)
+  if (file.size > 500 * 1024 * 1024) {
+    console.log('📦 Using CHUNKED upload for large file:', file.name, 'Size:', (file.size / 1024 / 1024).toFixed(2) + 'MB');
+    
+    const uploader = new ChunkedUploader({
+      chunkSize: 5 * 1024 * 1024, // 5MB chunks
+      maxRetries: 3,
+      concurrentUploads: 1, // Changed from 3 to 1 as per our fix
+      onProgress: onProgress,
+      onStatusChange: (status) => {
+        console.log('Upload status:', status);
+      },
+      axiosInstance: api // Use the configured axios instance with auth interceptors
+    });
+
+    // Initialize upload
+    await uploader.init(file, tenantId);
+    
+    // Store uploader instance in the cancel wrapper
+    if (cancelTokenSource && typeof cancelTokenSource === 'object') {
+      cancelTokenSource.uploader = uploader;
+    }
+
+    // Start upload
+    console.log('🚀 Starting chunked upload...');
+    const result = await uploader.upload();
+    
+    console.log('📊 Chunked upload result:', result);
+    
+    if (result.success) {
+      // Return in the expected format
+      return {
+        data: {
+          success: true,
+          data: {
+            process: {
+              id: result.processId,
+              _id: result.processId,
+              status: 'uploaded',
+              originalFilename: file.name
+            }
+          }
+        }
+      };
+    } else {
+      throw new Error('Chunked upload failed');
+    }
+  }
+
+  // Use regular upload for smaller files
+  console.log('📤 Using REGULAR upload for file:', file.name, 'Size:', (file.size / 1024 / 1024).toFixed(2) + 'MB');
+  
   const formData = new FormData();
   formData.append('video', file);
+
+  console.log('📨 Sending to API endpoint:', `/tenants/${tenantId}/processes`);
 
   return await processAPI.createProcess(tenantId, formData, (progressEvent) => {
     if (onProgress && progressEvent.total) {

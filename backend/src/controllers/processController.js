@@ -92,6 +92,23 @@ class ProcessController {
       const { tenantId } = req.params;
       const { id: userId } = req.user;
 
+      // Chunk finalization is now handled by a separate endpoint
+      // if (req.body && req.body.uploadId && !req.file) {
+      //   return this.finalizeChunkedUpload(req, res, next);
+      // }
+
+      logger.info('CreateProcess called', {
+        hasFile: !!req.file,
+        fileDetails: req.file ? {
+          originalname: req.file.originalname,
+          size: req.file.size,
+          mimetype: req.file.mimetype,
+          path: req.file.path
+        } : null,
+        uploadStats: req.uploadStats,
+        processId: req.processId
+      });
+
       if (!req.file) {
         return res.status(400).json({
           success: false,
@@ -250,11 +267,28 @@ class ProcessController {
       });
 
     } catch (error) {
-      logger.error('Create process error:', error);
+      logger.error('Create process error:', {
+        error: error.message,
+        stack: error.stack,
+        tenantId,
+        userId,
+        hasFile: !!req.file,
+        fileSize: req.file?.size,
+        processId: req.processId
+      });
       
       // Clean up uploaded file on error
       if (req.cleanupUploadedFile) {
         await req.cleanupUploadedFile();
+      }
+      
+      // Send proper error response
+      if (!res.headersSent) {
+        res.status(500).json({
+          success: false,
+          message: 'Failed to create process',
+          error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
+        });
       }
       
       next(error);
@@ -1346,6 +1380,79 @@ class ProcessController {
     } catch (error) {
       logger.error('Get video error:', error);
       next(error);
+    }
+  }
+
+  /**
+   * Finalize chunked upload
+   * @param {Object} req - Request object
+   * @param {Object} res - Response object
+   * @param {Function} next - Next middleware
+   */
+  async finalizeChunkedUpload(req, res, next) {
+    try {
+      const { tenantId } = req.params;
+      const { id: userId } = req.user;
+      const { uploadId, filename, fileSize, mimeType } = req.body;
+
+      logger.info('Finalizing chunked upload', {
+        tenantId,
+        userId,
+        uploadId,
+        filename,
+        fileSize
+      });
+
+      // Import chunk middleware functions
+      const { mergeChunks } = require('../middleware/chunkUploadMiddleware');
+
+      // Generate process ID
+      const mongoose = require('mongoose');
+      const processId = new mongoose.Types.ObjectId().toString();
+      
+      // Setup output path
+      const uploadDir = path.join(
+        process.env.UPLOAD_DIR || './uploads/temp',
+        tenantId,
+        processId
+      );
+      const outputPath = path.join(uploadDir, `${processId}_${Date.now()}_merged.mp4`);
+
+      // Merge chunks
+      await mergeChunks(tenantId, uploadId, outputPath);
+
+      // Create req.file object to match normal upload flow
+      // Import fs.promises for async file operations
+      const fsPromises = require('fs').promises;
+      
+      req.file = {
+        fieldname: 'video',
+        originalname: filename,
+        mimetype: mimeType,
+        path: outputPath,
+        size: fileSize || (await fsPromises.stat(outputPath)).size,
+        destination: uploadDir,
+        filename: path.basename(outputPath)
+      };
+
+      req.processId = processId;
+      req.uploadDir = uploadDir;
+      req.originalFilename = filename;
+
+      // Continue with normal processing
+      logger.info('Chunked upload merged successfully, continuing with normal flow');
+      
+      // Recursively call createProcess with the merged file
+      req.body = {}; // Clear body to avoid infinite loop
+      return this.createProcess(req, res, next);
+
+    } catch (error) {
+      logger.error('Finalize chunked upload error:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Failed to finalize upload',
+        error: process.env.NODE_ENV === 'development' ? error.message : undefined
+      });
     }
   }
 }

@@ -14,8 +14,22 @@ const uploadBaseDir = process.env.UPLOAD_DIR || './uploads/temp';
  */
 const streamingUploadMiddleware = (options = {}) => {
   return async (req, res, next) => {
+    logger.info('StreamingUploadMiddleware called', {
+      contentType: req.get('content-type'),
+      contentLength: req.get('content-length'),
+      method: req.method,
+      url: req.url
+    });
+    
+    // Skip if this is a chunk finalization request
+    if (req.isChunkFinalization) {
+      logger.info('Chunk finalization detected, skipping streaming upload');
+      return next();
+    }
+    
     // Check content type
     if (!req.is('multipart/form-data')) {
+      logger.warn('Not multipart/form-data, skipping streaming upload');
       return next();
     }
 
@@ -48,16 +62,25 @@ const streamingUploadMiddleware = (options = {}) => {
       }
     });
 
-    // Track upload progress
+    // Track upload progress with more detailed logging
     const progressInterval = setInterval(() => {
       if (uploadedBytes > 0 && !uploadAborted) {
-        const progress = ((uploadedBytes / req.headers['content-length']) * 100).toFixed(2);
-        logger.debug(`Upload progress: ${progress}% (${(uploadedBytes / 1024 / 1024).toFixed(2)}MB)`, {
+        const totalSize = parseInt(req.headers['content-length']) || 0;
+        const progress = totalSize > 0 ? ((uploadedBytes / totalSize) * 100).toFixed(2) : 0;
+        const uploadSpeedMBps = uploadedBytes > 0 ? 
+          (uploadedBytes / 1024 / 1024) / ((Date.now() - uploadStart) / 1000) : 0;
+        
+        logger.info(`Upload progress`, {
           uploadId,
-          tenantId: req.user?.tenantId
+          tenantId: req.user?.tenantId,
+          progress: `${progress}%`,
+          uploadedMB: (uploadedBytes / 1024 / 1024).toFixed(2),
+          totalMB: (totalSize / 1024 / 1024).toFixed(2),
+          speedMBps: uploadSpeedMBps.toFixed(2),
+          elapsedSeconds: Math.round((Date.now() - uploadStart) / 1000)
         });
       }
-    }, 5000); // Log every 5 seconds
+    }, 10000); // Log every 10 seconds for production
 
     // Promise to handle upload completion
     const uploadPromise = new Promise((resolve, reject) => {
@@ -78,11 +101,23 @@ const streamingUploadMiddleware = (options = {}) => {
       // Handle file upload
       bb.on('file', async (name, stream, info) => {
         const { filename, encoding, mimeType } = info;
+        
+        logger.info('File upload started:', {
+          receivedFieldName: name,
+          expectedFieldName: fieldName,
+          filename: filename,
+          mimeType: mimeType,
+          fieldMatches: name === fieldName
+        });
 
         // Validate field name
         if (name !== fieldName) {
+          logger.error('Field name mismatch:', { 
+            received: name, 
+            expected: fieldName 
+          });
           stream.resume(); // Drain stream
-          return reject(new Error(`Invalid field name. Expected '${fieldName}'`));
+          return reject(new Error(`Invalid field name. Expected '${fieldName}', got '${name}'`));
         }
 
         // Validate mime type
@@ -226,14 +261,19 @@ const streamingUploadMiddleware = (options = {}) => {
 
       // Handle finish
       bb.on('finish', () => {
-        if (!req.file && !uploadAborted) {
-          reject(new Error('No file uploaded'));
-        }
+        // The file check is done in the file stream 'finish' event
+        // No need to check here as it causes race conditions
       });
 
-      // Handle client disconnect
+      // Handle client disconnect with enhanced logging
       req.on('aborted', () => {
-        logger.warn('Upload aborted by client', { uploadId });
+        logger.warn('Upload aborted by client', { 
+          uploadId,
+          uploadedBytes,
+          totalSize: req.headers['content-length'],
+          progress: req.headers['content-length'] ? 
+            ((uploadedBytes / parseInt(req.headers['content-length'])) * 100).toFixed(2) + '%' : 'unknown'
+        });
         uploadAborted = true;
         cleanup();
         reject(new Error('Upload aborted by client'));
@@ -241,9 +281,26 @@ const streamingUploadMiddleware = (options = {}) => {
 
       req.on('close', () => {
         if (!req.complete) {
+          logger.warn('Connection closed unexpectedly', {
+            uploadId,
+            uploadedBytes,
+            complete: req.complete
+          });
           uploadAborted = true;
           cleanup();
         }
+      });
+
+      // Handle connection errors
+      req.on('error', (error) => {
+        logger.error('Request stream error:', { 
+          uploadId, 
+          error: error.message,
+          uploadedBytes 
+        });
+        uploadAborted = true;
+        cleanup();
+        reject(error);
       });
     });
 
@@ -268,6 +325,14 @@ const streamingUploadMiddleware = (options = {}) => {
       next();
     } catch (error) {
       clearInterval(progressInterval);
+      
+      logger.error('StreamingUploadMiddleware error:', {
+        error: error.message,
+        stack: error.stack,
+        uploadId: uploadId || 'unknown',
+        tenantId: req.params?.tenantId,
+        userId: req.user?.id
+      });
       
       // Clean up partial upload
       if (uploadPath && fs.existsSync(uploadPath)) {
