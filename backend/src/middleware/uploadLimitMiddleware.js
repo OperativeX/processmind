@@ -4,8 +4,16 @@ const logger = require('../utils/logger');
 // Middleware to check upload limits and send smart alerts
 const checkUploadLimits = async (req, res, next) => {
   try {
+    logger.info('CheckUploadLimits middleware called', {
+      userId: req.user?.id,
+      tenantId: req.params?.tenantId,
+      method: req.method,
+      url: req.url
+    });
+    
     const userId = req.user?.id;
     if (!userId) {
+      logger.error('Upload rejected: No user ID found');
       return res.status(401).json({
         success: false,
         message: 'Authentication required'
@@ -69,10 +77,18 @@ const checkUploadLimits = async (req, res, next) => {
 
     next();
   } catch (error) {
-    logger.error('Error checking upload limits:', error);
+    logger.error('Error checking upload limits:', {
+      error: error.message,
+      stack: error.stack,
+      userId: req.user?.id,
+      tenantId: req.params?.tenantId,
+      url: req.url,
+      method: req.method
+    });
     res.status(500).json({
       success: false,
-      message: 'Failed to check upload limits'
+      message: 'Failed to check upload limits',
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
     });
   }
 };
@@ -119,10 +135,29 @@ const processUploadAlerts = async (req, res, next) => {
 // Middleware to check storage limits (for file size)
 const checkStorageLimits = async (req, res, next) => {
   try {
+    logger.info('CheckStorageLimits middleware called', {
+      userId: req.user?.id,
+      hasFile: !!req.file,
+      fileSize: req.file?.size,
+      bodyFileSizeMB: req.body?.fileSizeMB,
+      headerFileSizeMB: req.headers['x-file-size-mb']
+    });
+    
     const userId = req.user?.id;
-    const fileSizeMB = req.body?.fileSizeMB || req.headers['x-file-size-mb'];
+    // Get file size from uploaded file, body, or header
+    let fileSizeMB = null;
+    if (req.file && req.file.size) {
+      fileSizeMB = req.file.size / (1024 * 1024);
+    } else {
+      fileSizeMB = req.body?.fileSizeMB || req.headers['x-file-size-mb'];
+    }
     
     if (!userId || !fileSizeMB) {
+      logger.warn('CheckStorageLimits skipped - missing userId or fileSizeMB', {
+        userId,
+        fileSizeMB,
+        hasFile: !!req.file
+      });
       return next();
     }
 

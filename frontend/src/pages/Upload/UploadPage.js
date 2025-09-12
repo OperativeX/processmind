@@ -102,15 +102,33 @@ const UploadPage = () => {
     mutationFn: (file) => {
       console.log('🚀 Starting upload for file:', file.name, 'Size:', formatBytes(file.size));
       
-      // Create cancel token for this upload
-      const cancelToken = axios.CancelToken.source();
-      setCancelTokenSource(cancelToken);
+      // Create cancel wrapper that works for both regular and chunked uploads
+      const cancelWrapper = {
+        uploader: null,
+        cancelToken: null,
+        cancel: function(message) {
+          if (this.uploader) {
+            // ChunkedUploader instance
+            this.uploader.cancel();
+          } else if (this.cancelToken) {
+            // Regular axios cancel token
+            this.cancelToken.cancel(message);
+          }
+        }
+      };
+      
+      // For regular uploads, create cancel token
+      if (file.size <= 100 * 1024 * 1024) {
+        cancelWrapper.cancelToken = axios.CancelToken.source();
+      }
+      
+      setCancelTokenSource(cancelWrapper);
       
       setIsUploading(true);
       return uploadFile(tenant.id, file, (progress) => {
         console.log('📤 Upload progress:', progress + '%');
         updateUploadProgress(progress);
-      }, cancelToken);
+      }, cancelWrapper);
     },
     onSuccess: (response) => {
       const process = response.data.data.process;

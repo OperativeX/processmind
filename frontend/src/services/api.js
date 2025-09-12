@@ -447,8 +447,8 @@ export const uploadFile = async (tenantId, file, onProgress, cancelTokenSource) 
   // Import ChunkedUploader
   const ChunkedUploader = (await import('../utils/ChunkedUploader')).default;
 
-  // Use chunked upload for files over 500MB (temporarily increased to disable for most files)
-  if (file.size > 500 * 1024 * 1024) {
+  // Use chunked upload for files over 100MB
+  if (file.size > 100 * 1024 * 1024) {
     console.log('📦 Using CHUNKED upload for large file:', file.name, 'Size:', (file.size / 1024 / 1024).toFixed(2) + 'MB');
     
     const uploader = new ChunkedUploader({

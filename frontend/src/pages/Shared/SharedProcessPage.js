@@ -137,7 +137,23 @@ const SharedProcessPage = () => {
       >
         <Container maxWidth="lg">
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+            <Typography 
+              variant="h6" 
+              component="a"
+              href="https://www.processlink.de"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{ 
+                fontWeight: 600,
+                color: 'inherit',
+                textDecoration: 'none',
+                userSelect: 'none',
+                cursor: 'pointer',
+                '&:hover': {
+                  opacity: 0.8
+                }
+              }}
+            >
               ProcessLink
             </Typography>
             <Stack direction="row" spacing={1} alignItems="center">

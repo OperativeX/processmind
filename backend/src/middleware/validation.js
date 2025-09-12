@@ -258,10 +258,21 @@ const validateAuth = {
 
 // Process validation schemas
 const validateProcess = {
-  create: validate(Joi.object({
-    // File validation is handled by multer middleware
-    // Any additional metadata can be validated here
-  })),
+  create: (req, res, next) => {
+    logger.info('ValidateProcess.create called', {
+      hasFile: !!req.file,
+      hasBody: !!req.body,
+      bodyContent: req.body,
+      fileDetails: req.file ? {
+        fieldname: req.file.fieldname,
+        originalname: req.file.originalname,
+        size: req.file.size
+      } : null
+    });
+    
+    // Skip validation for multipart uploads as the file is the main content
+    next();
+  },
 
   update: validate(Joi.object({
     title: Joi.string()

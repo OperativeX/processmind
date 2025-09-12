@@ -130,7 +130,13 @@ export const UploadProvider = ({ children }) => {
 
   const cancelUpload = () => {
     if (uploadState.cancelTokenSource) {
-      uploadState.cancelTokenSource.cancel('Upload cancelled by user');
+      // Check if it's a regular axios cancel token or ChunkedUploader instance
+      if (typeof uploadState.cancelTokenSource.cancel === 'function') {
+        uploadState.cancelTokenSource.cancel('Upload cancelled by user');
+      } else if (typeof uploadState.cancelTokenSource.pause === 'function') {
+        // It's a ChunkedUploader instance
+        uploadState.cancelTokenSource.cancel();
+      }
     }
     // Always reset the upload state completely when cancelling
     const resetState = {
