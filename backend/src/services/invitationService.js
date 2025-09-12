@@ -114,14 +114,14 @@ class InvitationService {
     
     const emailData = {
       to: invitation.email,
-      subject: `${inviter.fullName} invited you to join ${tenant.name} on Process Mind`,
+      subject: `${inviter.fullName} hat Sie eingeladen, ${tenant.name} auf ProcessLink beizutreten`,
       data: {
         inviterName: inviter.fullName,
         tenantName: tenant.name,
         role: invitation.role,
         message: invitation.message,
         inviteUrl,
-        expiresIn: '7 days'
+        expiresIn: '7 Tage'
       }
     };
     
@@ -144,7 +144,7 @@ class InvitationService {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Invitation to Process Mind</title>
+  <title>Einladung zu ProcessLink</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -265,14 +265,14 @@ class InvitationService {
     <div class="container">
       <div class="header">
         <div class="logo">P</div>
-        <h1>You're Invited!</h1>
-        <p class="subtitle">Join ${data.tenantName} on Process Mind</p>
+        <h1>Sie wurden eingeladen!</h1>
+        <p class="subtitle">Treten Sie ${data.tenantName} auf ProcessLink bei</p>
       </div>
       
       <div class="content">
         <p style="font-size: 16px; line-height: 1.6;">
-          <strong>${data.inviterName}</strong> has invited you to join their team on Process Mind, 
-          the AI-powered video processing platform.
+          <strong>${data.inviterName}</strong> hat Sie eingeladen, seinem Team auf ProcessLink beizutreten, 
+          der KI-gestützten Videoverarbeitungsplattform.
         </p>
         
         ${data.message ? `
@@ -286,38 +286,38 @@ class InvitationService {
         
         <div class="info-grid">
           <div class="info-row">
-            <div class="info-label">Organization:</div>
+            <div class="info-label">Organisation:</div>
             <div class="info-value">${data.tenantName}</div>
           </div>
           <div class="info-row">
-            <div class="info-label">Your Role:</div>
-            <div class="info-value">${data.role === 'admin' ? 'Administrator' : 'Team Member'}</div>
+            <div class="info-label">Ihre Rolle:</div>
+            <div class="info-value">${data.role === 'admin' ? 'Administrator' : 'Team-Mitglied'}</div>
           </div>
           <div class="info-row">
-            <div class="info-label">Invited by:</div>
+            <div class="info-label">Eingeladen von:</div>
             <div class="info-value">${data.inviterName}</div>
           </div>
         </div>
         
         <div style="text-align: center;">
-          <a href="${data.inviteUrl}" class="button">Accept Invitation</a>
+          <a href="${data.inviteUrl}" class="button">Einladung annehmen</a>
         </div>
         
         <div class="warning">
-          ⏰ This invitation expires in ${data.expiresIn}. After that, you'll need to request a new invitation.
+          Diese Einladung läuft in ${data.expiresIn} ab. Danach müssen Sie eine neue Einladung anfordern.
         </div>
         
         <p style="color: #8b949e; font-size: 14px; margin-top: 30px;">
-          If you weren't expecting this invitation, you can safely ignore this email.
+          Falls Sie diese Einladung nicht erwartet haben, können Sie diese E-Mail bedenkenlos ignorieren.
         </p>
       </div>
       
       <div class="footer">
         <p>
-          <a href="${process.env.FRONTEND_URL}">Process Mind</a> • AI-powered video processing
+          <a href="${process.env.FRONTEND_URL}">ProcessLink</a> • KI-gestützte Videoverarbeitung
         </p>
         <p style="margin-top: 20px; font-size: 12px;">
-          © 2024 Process Mind. All rights reserved.
+          © 2024 ProcessLink. Alle Rechte vorbehalten.
         </p>
       </div>
     </div>
@@ -332,26 +332,26 @@ class InvitationService {
    */
   getInvitationEmailText(data) {
     return `
-You're Invited to Process Mind!
+Sie wurden zu ProcessLink eingeladen!
 
-${data.inviterName} has invited you to join ${data.tenantName} on Process Mind.
+${data.inviterName} hat Sie eingeladen, ${data.tenantName} auf ProcessLink beizutreten.
 
-${data.message ? `Personal message:\n"${data.message}"\n- ${data.inviterName}\n\n` : ''}
+${data.message ? `Persönliche Nachricht:\n"${data.message}"\n- ${data.inviterName}\n\n` : ''}
 
 Details:
-- Organization: ${data.tenantName}
-- Your Role: ${data.role === 'admin' ? 'Administrator' : 'Team Member'}
-- Invited by: ${data.inviterName}
+- Organisation: ${data.tenantName}
+- Ihre Rolle: ${data.role === 'admin' ? 'Administrator' : 'Team-Mitglied'}
+- Eingeladen von: ${data.inviterName}
 
-Accept your invitation:
+Nehmen Sie Ihre Einladung an:
 ${data.inviteUrl}
 
-This invitation expires in ${data.expiresIn}.
+Diese Einladung läuft in ${data.expiresIn} ab.
 
-If you weren't expecting this invitation, you can safely ignore this email.
+Falls Sie diese Einladung nicht erwartet haben, können Sie diese E-Mail bedenkenlos ignorieren.
 
 ---
-Process Mind - AI-powered video processing
+ProcessLink - KI-gestützte Videoverarbeitung
 ${process.env.FRONTEND_URL}
     `;
   }

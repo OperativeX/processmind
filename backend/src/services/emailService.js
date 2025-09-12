@@ -114,7 +114,7 @@ class EmailService {
     this.transporter = {
       sendMail: async (mailOptions) => {
         console.log('\n' + '='.repeat(80));
-        console.log('📧 EMAIL OUTPUT (Console Provider)');
+        console.log('EMAIL OUTPUT (Console Provider)');
         console.log('='.repeat(80));
         console.log(`To: ${mailOptions.to}`);
         console.log(`From: ${mailOptions.from}`);
@@ -136,7 +136,7 @@ class EmailService {
         }
         console.log('='.repeat(80) + '\n');
         
-        return { messageId: `console-${Date.now()}@processmind.local` };
+        return { messageId: `console-${Date.now()}@processlink.local` };
       }
     };
   }
@@ -200,6 +200,14 @@ class EmailService {
         this.templates.listShare = this.getDefaultListShareTemplate();
       }
       
+      // Load account deletion template
+      const accountDeletionPath = path.join(templatesDir, 'accountDeletion.html');
+      if (await this.fileExists(accountDeletionPath)) {
+        this.templates.accountDeletion = await fs.readFile(accountDeletionPath, 'utf-8');
+      } else {
+        this.templates.accountDeletion = this.getDefaultAccountDeletionTemplate();
+      }
+      
       logger.info('Email templates loaded successfully');
       
     } catch (error) {
@@ -209,6 +217,7 @@ class EmailService {
       this.templates.passwordReset = this.getDefaultPasswordResetTemplate();
       this.templates.welcome = this.getDefaultWelcomeTemplate();
       this.templates.listShare = this.getDefaultListShareTemplate();
+      this.templates.accountDeletion = this.getDefaultAccountDeletionTemplate();
     }
   }
 
@@ -246,9 +255,9 @@ class EmailService {
       const mailOptions = {
         from: `"${process.env.SMTP_FROM_NAME}" <${process.env.SMTP_FROM}>`,
         to,
-        subject: `${tenantName} - Verify Your Email`,
+        subject: `${tenantName} - E-Mail-Adresse bestätigen`,
         html,
-        text: `Your verification code is: ${code}`
+        text: `Ihr Bestätigungscode lautet: ${code}`
       };
 
       const result = await this.transporter.sendMail(mailOptions);
@@ -288,9 +297,9 @@ class EmailService {
       const mailOptions = {
         from: `"${process.env.SMTP_FROM_NAME}" <${process.env.SMTP_FROM}>`,
         to,
-        subject: 'Reset Your Password - Process Mind',
+        subject: 'Passwort zurücksetzen - ProcessLink',
         html,
-        text: `Reset your password by visiting: ${resetUrl}`
+        text: `Setzen Sie Ihr Passwort zurück, indem Sie folgenden Link besuchen: ${resetUrl}`
       };
 
       const result = await this.transporter.sendMail(mailOptions);
@@ -331,9 +340,9 @@ class EmailService {
       const mailOptions = {
         from: `"${process.env.SMTP_FROM_NAME}" <${process.env.SMTP_FROM}>`,
         to,
-        subject: `Welcome to ${tenantName}!`,
+        subject: `Willkommen bei ${tenantName}!`,
         html,
-        text: `Welcome to ${tenantName}! Get started by logging in at: ${loginUrl}`
+        text: `Willkommen bei ${tenantName}! Beginnen Sie, indem Sie sich anmelden unter: ${loginUrl}`
       };
 
       const result = await this.transporter.sendMail(mailOptions);
@@ -427,6 +436,48 @@ class EmailService {
   }
 
   /**
+   * Send account deletion email
+   */
+  async sendAccountDeletionEmail(to, options = {}) {
+    if (!this.initialized) {
+      logger.warn('Email service not initialized. Cannot send account deletion email.');
+      return false;
+    }
+
+    try {
+      const { firstName = 'Benutzer', tenantName = 'ProcessLink' } = options;
+      
+      // Replace template variables
+      const html = this.templates.accountDeletion
+        .replace(/{{FIRST_NAME}}/g, firstName)
+        .replace(/{{TENANT_NAME}}/g, tenantName)
+        .replace(/{{YEAR}}/g, new Date().getFullYear());
+
+      const mailOptions = {
+        from: `"${process.env.SMTP_FROM_NAME}" <${process.env.SMTP_FROM}>`
+,
+        to,
+        subject: `${tenantName} - Ihr Konto wurde gelöscht`,
+        html,
+        text: `Hallo ${firstName},\n\nIhr Konto bei ${tenantName} wurde gemäß Ihrer Anfrage erfolgreich gelöscht. Alle Ihre Daten wurden unwiderruflich aus unseren Systemen entfernt.\n\nVielen Dank, dass Sie ProcessLink genutzt haben.`
+      };
+
+      const result = await this.transporter.sendMail(mailOptions);
+      
+      logger.info('Account deletion email sent successfully', {
+        to,
+        messageId: result.messageId
+      });
+      
+      return true;
+      
+    } catch (error) {
+      logger.error('Error sending account deletion email:', error);
+      return false;
+    }
+  }
+
+  /**
    * Send custom email
    */
   async sendEmail(to, subject, html, text) {
@@ -469,7 +520,7 @@ class EmailService {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Verify Your Email</title>
+  <title>E-Mail-Adresse bestätigen</title>
   <style>
     body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
     .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; }
@@ -485,19 +536,19 @@ class EmailService {
   <div class="container">
     <div class="header">
       <h1>{{TENANT_NAME}}</h1>
-      <p>Email Verification</p>
+      <p>E-Mail-Bestätigung</p>
     </div>
     <div class="content">
-      <h2>Hello {{FIRST_NAME}},</h2>
-      <p>Thank you for registering with {{TENANT_NAME}}. To complete your registration, please use the verification code below:</p>
+      <h2>Hallo {{FIRST_NAME}},</h2>
+      <p>Vielen Dank für Ihre Registrierung bei {{TENANT_NAME}}. Um Ihre Registrierung abzuschließen, verwenden Sie bitte den folgenden Bestätigungscode:</p>
       <div class="code-box">
         <div class="code">{{CODE}}</div>
       </div>
-      <p>This code will expire in 10 minutes for security reasons.</p>
-      <p>If you didn't request this verification, please ignore this email.</p>
+      <p>Dieser Code ist aus Sicherheitsgründen nur 10 Minuten gültig.</p>
+      <p>Falls Sie diese Bestätigung nicht angefordert haben, können Sie diese E-Mail ignorieren.</p>
     </div>
     <div class="footer">
-      <p>&copy; {{YEAR}} {{TENANT_NAME}}. All rights reserved.</p>
+      <p>&copy; {{YEAR}} {{TENANT_NAME}}. Alle Rechte vorbehalten.</p>
     </div>
   </div>
 </body>
@@ -513,7 +564,7 @@ class EmailService {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reset Your Password</title>
+  <title>Passwort zurücksetzen</title>
   <style>
     body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
     .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; }
@@ -526,21 +577,21 @@ class EmailService {
 <body>
   <div class="container">
     <div class="header">
-      <h1>Process Mind</h1>
-      <p>Password Reset Request</p>
+      <h1>ProcessLink</h1>
+      <p>Passwort-Zurücksetzung</p>
     </div>
     <div class="content">
-      <h2>Hello {{FIRST_NAME}},</h2>
-      <p>We received a request to reset your password. Click the button below to create a new password:</p>
+      <h2>Hallo {{FIRST_NAME}},</h2>
+      <p>Wir haben eine Anfrage erhalten, Ihr Passwort zurückzusetzen. Klicken Sie auf die Schaltfläche unten, um ein neues Passwort zu erstellen:</p>
       <p style="text-align: center;">
-        <a href="{{RESET_URL}}" class="button">Reset Password</a>
+        <a href="{{RESET_URL}}" class="button">Passwort zurücksetzen</a>
       </p>
-      <p>This link will expire in 1 hour for security reasons.</p>
-      <p>If you didn't request a password reset, please ignore this email. Your password will remain unchanged.</p>
-      <p><small>If the button doesn't work, copy and paste this link into your browser:<br>{{RESET_URL}}</small></p>
+      <p>Dieser Link ist aus Sicherheitsgründen nur 1 Stunde gültig.</p>
+      <p>Falls Sie keine Passwort-Zurücksetzung angefordert haben, können Sie diese E-Mail ignorieren. Ihr Passwort bleibt unverändert.</p>
+      <p><small>Falls die Schaltfläche nicht funktioniert, kopieren Sie diesen Link und fügen Sie ihn in Ihren Browser ein:<br>{{RESET_URL}}</small></p>
     </div>
     <div class="footer">
-      <p>&copy; {{YEAR}} Process Mind. All rights reserved.</p>
+      <p>&copy; {{YEAR}} ProcessLink. Alle Rechte vorbehalten.</p>
     </div>
   </div>
 </body>
@@ -556,7 +607,7 @@ class EmailService {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Welcome to {{TENANT_NAME}}</title>
+  <title>Willkommen bei {{TENANT_NAME}}</title>
   <style>
     body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
     .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; }
@@ -570,30 +621,30 @@ class EmailService {
 <body>
   <div class="container">
     <div class="header">
-      <h1>Welcome to {{TENANT_NAME}}!</h1>
+      <h1>Willkommen bei {{TENANT_NAME}}!</h1>
     </div>
     <div class="content">
-      <h2>Hello {{FIRST_NAME}},</h2>
-      <p>Welcome to {{TENANT_NAME}}! Your account has been successfully created and you're ready to start using our powerful video processing and AI analysis features.</p>
+      <h2>Hallo {{FIRST_NAME}},</h2>
+      <p>Willkommen bei {{TENANT_NAME}}! Ihr Konto wurde erfolgreich erstellt und Sie können jetzt unsere leistungsstarken Funktionen für Videoverarbeitung und KI-Analyse nutzen.</p>
       
       <div class="features">
-        <h3>What you can do with Process Mind:</h3>
+        <h3>Was Sie mit ProcessLink machen können:</h3>
         <ul>
-          <li>Upload and process videos with AI-powered transcription</li>
-          <li>Automatically generate tags and todo lists from your content</li>
-          <li>Visualize connections between your processes</li>
-          <li>Share and collaborate with your team</li>
+          <li>Videos mit KI-gestützter Transkription hochladen und verarbeiten</li>
+          <li>Automatisch Tags und Aufgabenlisten aus Ihren Inhalten generieren</li>
+          <li>Verbindungen zwischen Ihren Prozessen visualisieren</li>
+          <li>Mit Ihrem Team teilen und zusammenarbeiten</li>
         </ul>
       </div>
       
       <p style="text-align: center;">
-        <a href="{{LOGIN_URL}}" class="button">Get Started</a>
+        <a href="{{LOGIN_URL}}" class="button">Jetzt starten</a>
       </p>
       
-      <p>If you have any questions or need assistance, don't hesitate to reach out to our support team.</p>
+      <p>Falls Sie Fragen haben oder Unterstützung benötigen, zögern Sie nicht, unser Support-Team zu kontaktieren.</p>
     </div>
     <div class="footer">
-      <p>&copy; {{YEAR}} {{TENANT_NAME}}. All rights reserved.</p>
+      <p>&copy; {{YEAR}} {{TENANT_NAME}}. Alle Rechte vorbehalten.</p>
     </div>
   </div>
 </body>
@@ -657,7 +708,56 @@ class EmailService {
       </p>
     </div>
     <div class="footer">
-      <p>&copy; {{YEAR}} {{TENANT_NAME}}. All rights reserved.</p>
+      <p>&copy; {{YEAR}} {{TENANT_NAME}}. Alle Rechte vorbehalten.</p>
+    </div>
+  </div>
+</body>
+</html>`;
+  }
+
+  /**
+   * Default account deletion email template
+   */
+  getDefaultAccountDeletionTemplate() {
+    return `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Konto gelöscht</title>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+    .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; }
+    .header { background-color: #7c3aed; color: #ffffff; padding: 40px 20px; text-align: center; }
+    .content { padding: 40px 20px; }
+    .info-box { background-color: #f8f4ff; border: 1px solid #7c3aed; border-radius: 8px; padding: 20px; margin: 20px 0; }
+    .footer { background-color: #333333; color: #ffffff; padding: 20px; text-align: center; font-size: 12px; }
+    a { color: #7c3aed; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>{{TENANT_NAME}}</h1>
+      <p>Konto-Löschung bestätigt</p>
+    </div>
+    <div class="content">
+      <h2>Hallo {{FIRST_NAME}},</h2>
+      <p>Ihr Konto bei {{TENANT_NAME}} wurde gemäß Ihrer Anfrage erfolgreich gelöscht.</p>
+      <div class="info-box">
+        <h3>Was wurde gelöscht:</h3>
+        <ul>
+          <li>Ihr Benutzerkonto und alle persönlichen Daten</li>
+          <li>Alle hochgeladenen Videos und Verarbeitungen</li>
+          <li>Alle erstellten Sammlungen und Favoriten</li>
+          <li>Ihre Team-Mitgliedschaften und Einstellungen</li>
+        </ul>
+      </div>
+      <p>Diese Aktion ist dauerhaft und kann nicht rückgängig gemacht werden.</p>
+      <p>Falls Sie Fragen haben, kontaktieren Sie uns unter <a href="mailto:support@processlink.de">support@processlink.de</a></p>
+    </div>
+    <div class="footer">
+      <p>&copy; {{YEAR}} {{TENANT_NAME}}. Vielen Dank, dass Sie ProcessLink genutzt haben.</p>
     </div>
   </div>
 </body>

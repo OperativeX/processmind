@@ -1052,9 +1052,21 @@ class AuthController {
       await Tenant.findByIdAndDelete(tenant._id);
       logger.info('Deleted tenant', { tenantId: tenant._id });
 
+      // Store user info for email before deletion
+      const userEmail = user.email;
+      const userFirstName = user.firstName || 'Benutzer';
+      const tenantName = tenant.name;
+
       // Finally, delete the user
       await User.findByIdAndDelete(user._id);
       logger.info('Deleted user account', { userId: user._id, email: user.email });
+
+      // Send account deletion confirmation email
+      const emailService = require('../services/emailService');
+      await emailService.sendAccountDeletionEmail(userEmail, {
+        firstName: userFirstName,
+        tenantName: tenantName
+      });
 
       res.status(200).json({
         success: true,
