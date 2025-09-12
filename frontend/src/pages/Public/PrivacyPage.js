@@ -11,134 +11,134 @@ import PublicLayout from '../../layouts/PublicLayout';
 const PrivacyPage = () => {
   const sections = [
     {
-      title: '1. Information We Collect',
+      title: '1. Informationen, die wir erfassen',
       content: [
         {
-          subtitle: '1.1 Information You Provide',
-          text: 'We collect information you provide directly to us, such as when you create an account, upload videos, or contact us. This may include your name, email address, password, company information, and any video content you upload.'
+          subtitle: '1.1 Von Ihnen bereitgestellte Informationen',
+          text: 'Wir erfassen Informationen, die Sie uns direkt zur Verfügung stellen, z.B. wenn Sie ein Konto erstellen, Videos hochladen oder uns kontaktieren. Dies kann Ihren Namen, E-Mail-Adresse, Passwort, Unternehmensinformationen und alle von Ihnen hochgeladenen Videoinhalte umfassen.'
         },
         {
-          subtitle: '1.2 Automatically Collected Information',
-          text: 'When you use ProcessLink, we automatically collect certain information about your device and usage patterns, including IP address, browser type, operating system, referring URLs, and activity on our platform.'
+          subtitle: '1.2 Automatisch erfasste Informationen',
+          text: 'Wenn Sie ProcessLink nutzen, erfassen wir automatisch bestimmte Informationen über Ihr Gerät und Ihre Nutzungsmuster, einschließlich IP-Adresse, Browsertyp, Betriebssystem, verweisende URLs und Aktivitäten auf unserer Plattform.'
         },
         {
-          subtitle: '1.3 Video Content',
-          text: 'We process the video content you upload solely for the purpose of providing our transcription and analysis services. Your video content remains your property and is not shared with third parties.'
+          subtitle: '1.3 Videoinhalte',
+          text: 'Wir verarbeiten die von Ihnen hochgeladenen Videoinhalte ausschließlich zum Zweck der Bereitstellung unserer Transkriptions- und Analysedienste. Ihre Videoinhalte bleiben Ihr Eigentum und werden nicht an Dritte weitergegeben.'
         }
       ]
     },
     {
-      title: '2. How We Use Your Information',
+      title: '2. Wie wir Ihre Informationen nutzen',
       content: [
         {
-          subtitle: '2.1 Service Provision',
-          text: 'We use your information to provide, maintain, and improve our services, including video transcription, AI analysis, and knowledge management features.'
+          subtitle: '2.1 Bereitstellung von Diensten',
+          text: 'Wir nutzen Ihre Informationen zur Bereitstellung, Wartung und Verbesserung unserer Dienste, einschließlich Videotranskription, KI-Analyse und Wissensmanagement-Funktionen.'
         },
         {
-          subtitle: '2.2 Communication',
-          text: 'We may use your email address to send you service-related notices, updates about new features, and respond to your inquiries.'
+          subtitle: '2.2 Kommunikation',
+          text: 'Wir können Ihre E-Mail-Adresse verwenden, um Ihnen dienstbezogene Benachrichtigungen, Updates über neue Funktionen zu senden und auf Ihre Anfragen zu antworten.'
         },
         {
-          subtitle: '2.3 Analytics and Improvement',
-          text: 'We analyze usage patterns to improve our platform, develop new features, and ensure the security and reliability of our services.'
+          subtitle: '2.3 Analysen und Verbesserungen',
+          text: 'Wir analysieren Nutzungsmuster, um unsere Plattform zu verbessern, neue Funktionen zu entwickeln und die Sicherheit und Zuverlässigkeit unserer Dienste zu gewährleisten.'
         }
       ]
     },
     {
-      title: '3. Data Security',
+      title: '3. Datensicherheit',
       content: [
         {
-          subtitle: '3.1 Encryption',
-          text: 'All data transmitted to and from Process Mind is encrypted using industry-standard SSL/TLS protocols. Your video content and transcripts are encrypted at rest.'
+          subtitle: '3.1 Verschlüsselung',
+          text: 'Alle Daten, die zu und von ProcessLink übertragen werden, sind mit branchenstandard SSL/TLS-Protokollen verschlüsselt. Ihre Videoinhalte und Transkripte werden im Ruhezustand verschlüsselt.'
         },
         {
-          subtitle: '3.2 Access Controls',
-          text: 'We implement strict access controls and authentication mechanisms to ensure only authorized personnel can access user data, and only when necessary for service provision.'
+          subtitle: '3.2 Zugangskontrollen',
+          text: 'Wir implementieren strenge Zugangskontrollen und Authentifizierungsmechanismen, um sicherzustellen, dass nur autorisiertes Personal auf Benutzerdaten zugreifen kann, und nur wenn dies für die Dienstleistungserbringung erforderlich ist.'
         },
         {
-          subtitle: '3.3 Data Centers',
-          text: 'Our data is stored in secure, SOC 2 compliant data centers with 24/7 monitoring, redundant backups, and disaster recovery procedures.'
+          subtitle: '3.3 Rechenzentren',
+          text: 'Unsere Daten werden in sicheren, SOC 2-konformen Rechenzentren mit 24/7-Überwachung, redundanten Backups und Disaster-Recovery-Verfahren gespeichert.'
         }
       ]
     },
     {
-      title: '4. Data Sharing and Disclosure',
+      title: '4. Datenweitergabe und Offenlegung',
       content: [
         {
-          subtitle: '4.1 No Selling of Data',
-          text: 'We do not sell, rent, or trade your personal information or video content to third parties.'
+          subtitle: '4.1 Kein Verkauf von Daten',
+          text: 'Wir verkaufen, vermieten oder handeln nicht mit Ihren persönlichen Informationen oder Videoinhalten an Dritte.'
         },
         {
-          subtitle: '4.2 Service Providers',
-          text: 'We may share information with trusted third-party service providers who assist us in operating our platform, such as cloud storage providers (AWS) and AI services (OpenAI), under strict confidentiality agreements.'
+          subtitle: '4.2 Dienstleister',
+          text: 'Wir können Informationen mit vertrauenswürdigen Drittanbietern teilen, die uns beim Betrieb unserer Plattform unterstützen, wie Cloud-Speicher-Anbieter (AWS) und KI-Dienste (OpenAI), unter strengen Vertraulichkeitsvereinbarungen.'
         },
         {
-          subtitle: '4.3 Legal Requirements',
-          text: 'We may disclose information if required by law, court order, or governmental authority, or if we believe disclosure is necessary to protect rights, property, or safety.'
+          subtitle: '4.3 Rechtliche Anforderungen',
+          text: 'Wir können Informationen offenlegen, wenn dies gesetzlich, per Gerichtsbeschluss oder behördlich vorgeschrieben ist, oder wenn wir glauben, dass die Offenlegung zum Schutz von Rechten, Eigentum oder Sicherheit erforderlich ist.'
         }
       ]
     },
     {
-      title: '5. Your Rights and Choices',
+      title: '5. Ihre Rechte und Wahlmöglichkeiten',
       content: [
         {
-          subtitle: '5.1 Access and Update',
-          text: 'You can access and update your account information at any time through your account settings.'
+          subtitle: '5.1 Zugriff und Aktualisierung',
+          text: 'Sie können jederzeit auf Ihre Kontoinformationen zugreifen und diese über Ihre Kontoeinstellungen aktualisieren.'
         },
         {
-          subtitle: '5.2 Data Export',
-          text: 'You can export your transcripts and data at any time through our export features.'
+          subtitle: '5.2 Datenexport',
+          text: 'Sie können Ihre Transkripte und Daten jederzeit über unsere Exportfunktionen exportieren.'
         },
         {
-          subtitle: '5.3 Account Deletion',
-          text: 'You may request deletion of your account and all associated data by contacting our support team. We will delete your data within 30 days of your request.'
+          subtitle: '5.3 Kontolöschung',
+          text: 'Sie können die Löschung Ihres Kontos und aller damit verbundenen Daten beantragen, indem Sie unser Support-Team kontaktieren. Wir werden Ihre Daten innerhalb von 30 Tagen nach Ihrer Anfrage löschen.'
         },
         {
-          subtitle: '5.4 Data Portability',
-          text: 'We provide tools to export your data in common formats, ensuring you can take your content with you.'
+          subtitle: '5.4 Datenportabilität',
+          text: 'Wir bieten Tools zum Export Ihrer Daten in gängigen Formaten, damit Sie Ihre Inhalte mitnehmen können.'
         }
       ]
     },
     {
-      title: '6. Data Retention',
+      title: '6. Datenspeicherung',
       content: [
         {
-          text: 'We retain your account information for as long as your account is active. Video content and transcripts are retained according to your subscription plan. After account deletion, we may retain certain information as required by law or for legitimate business purposes.'
+          text: 'Wir speichern Ihre Kontoinformationen so lange, wie Ihr Konto aktiv ist. Videoinhalte und Transkripte werden gemäß Ihrem Abonnementplan gespeichert. Nach der Kontolöschung können wir bestimmte Informationen aufbewahren, soweit dies gesetzlich vorgeschrieben ist oder für legitime Geschäftszwecke erforderlich ist.'
         }
       ]
     },
     {
-      title: '7. International Data Transfers',
+      title: '7. Internationale Datenübertragungen',
       content: [
         {
-          text: 'Your information may be transferred to and processed in countries other than your country of residence. We ensure appropriate safeguards are in place to protect your information in accordance with this privacy policy.'
+          text: 'Ihre Informationen können in andere Länder als Ihr Wohnsitzland übertragen und dort verarbeitet werden. Wir stellen sicher, dass angemessene Schutzmaßnahmen zum Schutz Ihrer Informationen gemäß dieser Datenschutzrichtlinie vorhanden sind.'
         }
       ]
     },
     {
-      title: '8. Children\'s Privacy',
+      title: '8. Datenschutz für Kinder',
       content: [
         {
-          text: 'ProcessLink is not intended for users under the age of 18. We do not knowingly collect personal information from children under 18.'
+          text: 'ProcessLink ist nicht für Nutzer unter 18 Jahren bestimmt. Wir erfassen wissentlich keine persönlichen Informationen von Kindern unter 18 Jahren.'
         }
       ]
     },
     {
-      title: '9. Changes to This Policy',
+      title: '9. Änderungen dieser Richtlinie',
       content: [
         {
-          text: 'We may update this privacy policy from time to time. We will notify you of any material changes by posting the new policy on this page and updating the "Last Updated" date.'
+          text: 'Wir können diese Datenschutzrichtlinie von Zeit zu Zeit aktualisieren. Wir werden Sie über wesentliche Änderungen informieren, indem wir die neue Richtlinie auf dieser Seite veröffentlichen und das "Zuletzt aktualisiert"-Datum aktualisieren.'
         }
       ]
     },
     {
-      title: '10. Contact Us',
+      title: '10. Kontakt',
       content: [
         {
-          text: 'If you have any questions about this privacy policy or our data practices, please contact us at:'
+          text: 'Wenn Sie Fragen zu dieser Datenschutzrichtlinie oder unseren Datenpraktiken haben, kontaktieren Sie uns bitte unter:'
         },
         {
-          text: 'Email: privacy@processlink.ai\nAddress: ProcessLink, Inc.\n[Your Address]\n[City, State, ZIP]'
+          text: 'E-Mail: datenschutz@processlink.de\nAdresse: ProcessLink GmbH\n[Ihre Adresse]\n[Stadt, PLZ]'
         }
       ]
     }
@@ -161,7 +161,7 @@ const PrivacyPage = () => {
               WebkitTextFillColor: 'transparent',
             }}
           >
-            Privacy Policy
+            Datenschutzerklärung
           </Typography>
           <Typography
             variant="h6"
@@ -169,7 +169,7 @@ const PrivacyPage = () => {
             color="text.secondary"
             sx={{ mb: 4 }}
           >
-            Last Updated: December 2024
+            Zuletzt aktualisiert: Dezember 2024
           </Typography>
           <Typography
             variant="body1"
@@ -177,8 +177,8 @@ const PrivacyPage = () => {
             color="text.secondary"
             sx={{ maxWidth: '800px', mx: 'auto' }}
           >
-            At ProcessLink, we take your privacy seriously. This policy describes how we collect, 
-            use, and protect your information when you use our services.
+            Bei ProcessLink nehmen wir Ihren Datenschutz ernst. Diese Richtlinie beschreibt, wie wir Ihre 
+            Informationen erfassen, nutzen und schützen, wenn Sie unsere Dienste nutzen.
           </Typography>
         </Container>
       </Box>
@@ -243,11 +243,11 @@ const PrivacyPage = () => {
             }}
           >
             <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-              Your Privacy Matters
+              Ihr Datenschutz ist uns wichtig
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-              If you have any questions or concerns about our privacy practices, please don't hesitate to 
-              contact us. We're committed to protecting your data and maintaining your trust.
+              Wenn Sie Fragen oder Bedenken zu unseren Datenschutzpraktiken haben, zögern Sie bitte nicht, 
+              uns zu kontaktieren. Wir sind dem Schutz Ihrer Daten und der Wahrung Ihres Vertrauens verpflichtet.
             </Typography>
             <Link
               href="/contact"
@@ -260,7 +260,7 @@ const PrivacyPage = () => {
                 },
               }}
             >
-              Contact Our Privacy Team →
+              Datenschutzteam kontaktieren →
             </Link>
           </Box>
         </Container>

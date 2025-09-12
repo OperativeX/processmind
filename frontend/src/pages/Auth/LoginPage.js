@@ -30,11 +30,11 @@ import ProcessLinkLogo from '../../components/Common/ProcessLinkLogo';
 const schema = yup.object().shape({
   email: yup
     .string()
-    .email('Please enter a valid email address')
-    .required('Email is required'),
+    .email('Bitte geben Sie eine gültige E-Mail-Adresse ein')
+    .required('E-Mail ist erforderlich'),
   password: yup
     .string()
-    .required('Password is required'),
+    .required('Passwort ist erforderlich'),
 });
 
 const LoginPage = () => {
@@ -67,10 +67,10 @@ const LoginPage = () => {
       if (result.success) {
         navigate(from, { replace: true });
       } else {
-        setLoginError(result.error || 'Login failed. Please try again.');
+        setLoginError(result.error || 'Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut.');
       }
     } catch (error) {
-      setLoginError('An unexpected error occurred. Please try again.');
+      setLoginError('Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut.');
     } finally {
       setIsSubmitting(false);
     }
@@ -123,10 +123,10 @@ const LoginPage = () => {
               ProcessLink
             </Typography>
             <Typography variant="h6" sx={{ mb: 1 }}>
-              Welcome back
+              Willkommen zurück
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Sign in to your account to continue
+              Melden Sie sich in Ihrem Konto an, um fortzufahren
             </Typography>
           </Box>
 
@@ -142,7 +142,7 @@ const LoginPage = () => {
             <TextField
               {...register('email')}
               fullWidth
-              label="Email address"
+              label="E-Mail-Adresse"
               type="email"
               autoComplete="email"
               autoFocus
@@ -161,7 +161,7 @@ const LoginPage = () => {
             <TextField
               {...register('password')}
               fullWidth
-              label="Password"
+              label="Passwort"
               type={showPassword ? 'text' : 'password'}
               autoComplete="current-password"
               error={!!errors.password}
@@ -198,7 +198,7 @@ const LoginPage = () => {
               {isSubmitting ? (
                 <CircularProgress size={24} color="inherit" />
               ) : (
-                'Sign In'
+                'Anmelden'
               )}
             </Button>
           </Box>
@@ -211,7 +211,7 @@ const LoginPage = () => {
               variant="body2"
               sx={{ textDecoration: 'none' }}
             >
-              Forgot your password?
+              Passwort vergessen?
             </Link>
           </Box>
 
@@ -220,7 +220,7 @@ const LoginPage = () => {
           {/* Sign Up Link */}
           <Box sx={{ textAlign: 'center' }}>
             <Typography variant="body2" color="text.secondary">
-              Don't have an account?{' '}
+              Noch kein Konto?{' '}
               <Link
                 component={RouterLink}
                 to="/register"
@@ -230,7 +230,7 @@ const LoginPage = () => {
                   color: 'primary.main',
                 }}
               >
-                Sign up for free
+                Kostenlos registrieren
               </Link>
             </Typography>
           </Box>
@@ -248,7 +248,7 @@ const LoginPage = () => {
         }}
       >
         <Typography variant="body2" color="text.secondary">
-          © 2024 ProcessLink. AI-powered video processing.
+          © 2024 ProcessLink. KI-gestützte Videoverarbeitung.
         </Typography>
       </Box>
     </Box>

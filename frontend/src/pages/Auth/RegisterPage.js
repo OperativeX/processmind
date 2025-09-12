@@ -38,44 +38,44 @@ import { debounce } from 'lodash';
 const schema = yup.object().shape({
   firstName: yup
     .string()
-    .min(2, 'First name must be at least 2 characters')
-    .max(50, 'First name cannot exceed 50 characters')
-    .required('First name is required'),
+    .min(2, 'Vorname muss mindestens 2 Zeichen lang sein')
+    .max(50, 'Vorname darf maximal 50 Zeichen lang sein')
+    .required('Vorname ist erforderlich'),
   lastName: yup
     .string()
-    .min(2, 'Last name must be at least 2 characters')
-    .max(50, 'Last name cannot exceed 50 characters')
-    .required('Last name is required'),
+    .min(2, 'Nachname muss mindestens 2 Zeichen lang sein')
+    .max(50, 'Nachname darf maximal 50 Zeichen lang sein')
+    .required('Nachname ist erforderlich'),
   email: yup
     .string()
-    .email('Please enter a valid email address')
-    .required('Email is required'),
+    .email('Bitte geben Sie eine gültige E-Mail-Adresse ein')
+    .required('E-Mail ist erforderlich'),
   tenantName: yup
     .string()
-    .min(2, 'Organization name must be at least 2 characters')
-    .max(100, 'Organization name cannot exceed 100 characters')
-    .required('Organization name is required'),
+    .min(2, 'Organisationsname muss mindestens 2 Zeichen lang sein')
+    .max(100, 'Organisationsname darf maximal 100 Zeichen lang sein')
+    .required('Organisationsname ist erforderlich'),
   subdomain: yup
     .string()
-    .min(3, 'Subdomain must be at least 3 characters')
-    .max(30, 'Subdomain cannot exceed 30 characters')
+    .min(3, 'Subdomain muss mindestens 3 Zeichen lang sein')
+    .max(30, 'Subdomain darf maximal 30 Zeichen lang sein')
     .matches(
       /^[a-z0-9-]+$/,
-      'Subdomain can only contain lowercase letters, numbers, and hyphens'
+      'Subdomain darf nur Kleinbuchstaben, Zahlen und Bindestriche enthalten'
     )
-    .required('Subdomain is required'),
+    .required('Subdomain ist erforderlich'),
   password: yup
     .string()
-    .min(8, 'Password must be at least 8 characters')
+    .min(8, 'Passwort muss mindestens 8 Zeichen lang sein')
     .matches(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
-      'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character'
+      'Passwort muss mindestens einen Großbuchstaben, einen Kleinbuchstaben, eine Zahl und ein Sonderzeichen enthalten'
     )
-    .required('Password is required'),
+    .required('Passwort ist erforderlich'),
   confirmPassword: yup
     .string()
-    .oneOf([yup.ref('password'), null], 'Passwords must match')
-    .required('Please confirm your password'),
+    .oneOf([yup.ref('password'), null], 'Passwörter müssen übereinstimmen')
+    .required('Bitte bestätigen Sie Ihr Passwort'),
 });
 
 const RegisterPage = () => {
@@ -118,7 +118,7 @@ const RegisterPage = () => {
         setSubdomainStatus({
           checking: false,
           available: false,
-          message: 'Only lowercase letters, numbers and hyphens allowed'
+          message: 'Nur Kleinbuchstaben, Zahlen und Bindestriche erlaubt'
         });
         return;
       }
@@ -132,15 +132,15 @@ const RegisterPage = () => {
             checking: false,
             available: response.data.data.available,
             message: response.data.data.available 
-              ? `${subdomain}.processlink.de is available!`
-              : 'This subdomain is already taken'
+              ? `${subdomain}.processlink.de ist verfügbar!`
+              : 'Diese Subdomain ist bereits vergeben'
           });
         }
       } catch (error) {
         setSubdomainStatus({
           checking: false,
           available: false,
-          message: 'Error checking availability'
+          message: 'Fehler bei der Verfügbarkeitsprüfung'
         });
       }
     }, 500),
@@ -171,12 +171,12 @@ const RegisterPage = () => {
 
     const strength = {
       0: { label: '', color: 'inherit' },
-      1: { label: 'Very Weak', color: 'error.main' },
-      2: { label: 'Weak', color: 'error.main' },
-      3: { label: 'Fair', color: 'warning.main' },
-      4: { label: 'Good', color: 'info.main' },
-      5: { label: 'Strong', color: 'success.main' },
-      6: { label: 'Very Strong', color: 'success.main' },
+      1: { label: 'Sehr schwach', color: 'error.main' },
+      2: { label: 'Schwach', color: 'error.main' },
+      3: { label: 'Mittel', color: 'warning.main' },
+      4: { label: 'Gut', color: 'info.main' },
+      5: { label: 'Stark', color: 'success.main' },
+      6: { label: 'Sehr stark', color: 'success.main' },
     };
 
     return { score: (score / 6) * 100, ...strength[score] };
@@ -199,10 +199,10 @@ const RegisterPage = () => {
           replace: true 
         });
       } else {
-        setRegisterError(result.error || 'Registration failed. Please try again.');
+        setRegisterError(result.error || 'Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut.');
       }
     } catch (error) {
-      setRegisterError('An unexpected error occurred. Please try again.');
+      setRegisterError('Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut.');
     } finally {
       setIsSubmitting(false);
     }
@@ -252,10 +252,10 @@ const RegisterPage = () => {
               ProcessLink
             </Typography>
             <Typography variant="h6" sx={{ mb: 1 }}>
-              Create your account
+              Erstellen Sie Ihr Konto
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Start processing videos with AI-powered analysis
+              Beginnen Sie mit der Verarbeitung von Videos mit KI-gestützter Analyse
             </Typography>
           </Box>
 
@@ -273,7 +273,7 @@ const RegisterPage = () => {
               <TextField
                 {...register('firstName')}
                 fullWidth
-                label="First Name"
+                label="Vorname"
                 autoComplete="given-name"
                 autoFocus
                 error={!!errors.firstName}
@@ -289,7 +289,7 @@ const RegisterPage = () => {
               <TextField
                 {...register('lastName')}
                 fullWidth
-                label="Last Name"
+                label="Nachname"
                 autoComplete="family-name"
                 error={!!errors.lastName}
                 helperText={errors.lastName?.message}
@@ -299,7 +299,7 @@ const RegisterPage = () => {
             <TextField
               {...register('email')}
               fullWidth
-              label="Email address"
+              label="E-Mail-Adresse"
               type="email"
               autoComplete="email"
               error={!!errors.email}
@@ -317,7 +317,7 @@ const RegisterPage = () => {
             <TextField
               {...register('tenantName')}
               fullWidth
-              label="Organization Name"
+              label="Organisationsname"
               autoComplete="organization"
               error={!!errors.tenantName}
               helperText={errors.tenantName?.message}
@@ -335,12 +335,12 @@ const RegisterPage = () => {
               {...register('subdomain')}
               fullWidth
               label="Subdomain"
-              placeholder="your-company"
+              placeholder="ihre-firma"
               error={!!errors.subdomain || (subdomainStatus.available === false)}
               helperText={
                 errors.subdomain?.message || 
                 subdomainStatus.message ||
-                'This will be your unique URL: your-company.processlink.de'
+                'Dies wird Ihre eindeutige URL: ihre-firma.processlink.de'
               }
               sx={{ mb: 2 }}
               InputProps={{
@@ -366,7 +366,7 @@ const RegisterPage = () => {
             <TextField
               {...register('password')}
               fullWidth
-              label="Password"
+              label="Passwort"
               type={showPassword ? 'text' : 'password'}
               autoComplete="new-password"
               error={!!errors.password}
@@ -397,7 +397,7 @@ const RegisterPage = () => {
               <Box sx={{ mb: 2 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                   <Typography variant="caption" color="text.secondary">
-                    Password Strength
+                    Passwortstärke
                   </Typography>
                   <Typography 
                     variant="caption" 
@@ -424,7 +424,7 @@ const RegisterPage = () => {
             <TextField
               {...register('confirmPassword')}
               fullWidth
-              label="Confirm Password"
+              label="Passwort bestätigen"
               type={showConfirmPassword ? 'text' : 'password'}
               autoComplete="new-password"
               error={!!errors.confirmPassword}
@@ -461,20 +461,20 @@ const RegisterPage = () => {
               {isSubmitting ? (
                 <CircularProgress size={24} color="inherit" />
               ) : (
-                'Create Account'
+                'Konto erstellen'
               )}
             </Button>
           </Box>
 
           {/* Terms */}
           <Typography variant="body2" color="text.secondary" sx={{ mb: 3, textAlign: 'center' }}>
-            By creating an account, you agree to our{' '}
+            Durch die Erstellung eines Kontos stimmen Sie unseren{' '}
             <Link href="#" sx={{ textDecoration: 'none' }}>
-              Terms of Service
+              Nutzungsbedingungen
             </Link>{' '}
-            and{' '}
+            und{' '}
             <Link href="#" sx={{ textDecoration: 'none' }}>
-              Privacy Policy
+              Datenschutzrichtlinie
             </Link>
           </Typography>
 
@@ -483,7 +483,7 @@ const RegisterPage = () => {
           {/* Sign In Link */}
           <Box sx={{ textAlign: 'center' }}>
             <Typography variant="body2" color="text.secondary">
-              Already have an account?{' '}
+              Haben Sie bereits ein Konto?{' '}
               <Link
                 component={RouterLink}
                 to="/login"
@@ -493,7 +493,7 @@ const RegisterPage = () => {
                   color: 'primary.main',
                 }}
               >
-                Sign in
+                Anmelden
               </Link>
             </Typography>
           </Box>
@@ -511,7 +511,7 @@ const RegisterPage = () => {
         }}
       >
         <Typography variant="body2" color="text.secondary">
-          © 2024 ProcessLink. AI-powered video processing.
+          © 2024 ProcessLink. KI-gestützte Videoverarbeitung.
         </Typography>
       </Box>
     </Box>

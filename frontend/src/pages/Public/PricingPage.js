@@ -26,58 +26,58 @@ const PricingPage = () => {
 
   const plans = [
     {
-      name: 'Free',
+      name: 'Kostenlos',
       price: '0',
-      description: 'Perfect for trying out Process Mind',
+      description: 'Perfekt zum Ausprobieren von ProcessLink',
       features: [
-        '5 video uploads per month',
-        '10-minute max video length',
-        'Basic transcription',
-        'Standard processing speed',
-        'Export to text format',
-        'Community support',
+        '5 Video-Uploads pro Monat',
+        '10 Minuten maximale Videolänge',
+        'Basis-Transkription',
+        'Standard-Verarbeitungsgeschwindigkeit',
+        'Export im Textformat',
+        'Community-Support',
       ],
-      buttonText: 'Start Free',
+      buttonText: 'Kostenlos starten',
       buttonVariant: 'outlined',
       popular: false,
     },
     {
       name: 'Pro',
       price: '29',
-      description: 'For professionals and small teams',
+      description: 'Für Profis und kleine Teams',
       features: [
-        '100 video uploads per month',
-        '60-minute max video length',
-        'Advanced AI analysis',
-        'Priority processing speed',
-        'All export formats',
-        'Tag-based organization',
-        'Knowledge graph visualization',
-        'Email support',
-        'API access',
+        '100 Video-Uploads pro Monat',
+        '60 Minuten maximale Videolänge',
+        'Erweiterte KI-Analyse',
+        'Priorisierte Verarbeitungsgeschwindigkeit',
+        'Alle Exportformate',
+        'Tag-basierte Organisation',
+        'Wissensgraph-Visualisierung',
+        'E-Mail-Support',
+        'API-Zugang',
       ],
-      buttonText: 'Start Pro Trial',
+      buttonText: 'Pro-Version testen',
       buttonVariant: 'contained',
       popular: true,
     },
     {
       name: 'Business',
       price: '99',
-      description: 'For growing teams and organizations',
+      description: 'Für wachsende Teams und Organisationen',
       features: [
-        'Unlimited video uploads',
-        'Unlimited video length',
-        'Custom AI models',
-        'Fastest processing speed',
-        'Advanced integrations',
-        'Team collaboration',
-        'Admin dashboard',
-        'Priority support',
-        'Custom API limits',
-        'SSO authentication',
-        'Advanced analytics',
+        'Unbegrenzte Video-Uploads',
+        'Unbegrenzte Videolänge',
+        'Benutzerdefinierte KI-Modelle',
+        'Schnellste Verarbeitungsgeschwindigkeit',
+        'Erweiterte Integrationen',
+        'Team-Zusammenarbeit',
+        'Admin-Dashboard',
+        'Prioritäts-Support',
+        'Benutzerdefinierte API-Limits',
+        'SSO-Authentifizierung',
+        'Erweiterte Analysen',
       ],
-      buttonText: 'Contact Sales',
+      buttonText: 'Vertrieb kontaktieren',
       buttonVariant: 'outlined',
       popular: false,
     },
@@ -100,7 +100,7 @@ const PricingPage = () => {
               WebkitTextFillColor: 'transparent',
             }}
           >
-            Simple, Transparent Pricing
+            Einfache, transparente Preisgestaltung
           </Typography>
           <Typography
             variant="h5"
@@ -108,7 +108,7 @@ const PricingPage = () => {
             color="text.secondary"
             sx={{ mb: 8, fontWeight: 400, maxWidth: '600px', mx: 'auto' }}
           >
-            Choose the perfect plan for your needs. Always flexible to scale up or down.
+            Wählen Sie den perfekten Plan für Ihre Bedürfnisse. Immer flexibel skalierbar.
           </Typography>
         </Container>
       </Box>
@@ -139,7 +139,7 @@ const PricingPage = () => {
                 >
                   {plan.popular && (
                     <Chip
-                      label="Most Popular"
+                      label="Beliebteste Wahl"
                       icon={<StarIcon sx={{ fontSize: 16 }} />}
                       size="small"
                       sx={{
@@ -172,7 +172,7 @@ const PricingPage = () => {
                         color="text.secondary"
                         sx={{ ml: 1 }}
                       >
-                        /month
+                        /Monat
                       </Typography>
                     </Box>
                     <Typography
@@ -251,41 +251,41 @@ const PricingPage = () => {
             align="center"
             sx={{ fontWeight: 600, mb: 6 }}
           >
-            Frequently Asked Questions
+            Häufig gestellte Fragen
           </Typography>
           
           <Box sx={{ mb: 4 }}>
             <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-              Can I change plans anytime?
+              Kann ich jederzeit den Plan wechseln?
             </Typography>
             <Typography variant="body1" color="text.secondary">
-              Yes! You can upgrade or downgrade your plan at any time. Changes take effect immediately, 
-              and we'll prorate the billing accordingly.
+              Ja! Sie können Ihren Plan jederzeit upgraden oder downgraden. Änderungen treten sofort in Kraft 
+              und wir berechnen die Gebühren anteilig.
             </Typography>
           </Box>
 
           <Box sx={{ mb: 4 }}>
             <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-              What payment methods do you accept?
+              Welche Zahlungsmethoden akzeptieren Sie?
             </Typography>
             <Typography variant="body1" color="text.secondary">
-              We accept all major credit cards (Visa, Mastercard, American Express) and process 
-              payments securely through Stripe. Business plans can also pay by invoice.
+              Wir akzeptieren alle gängigen Kreditkarten (Visa, Mastercard, American Express) und 
+              verarbeiten Zahlungen sicher über Stripe. Business-Pläne können auch per Rechnung bezahlen.
             </Typography>
           </Box>
 
           <Box sx={{ mb: 4 }}>
             <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-              Is there a free trial for paid plans?
+              Gibt es eine kostenlose Testversion für bezahlte Pläne?
             </Typography>
             <Typography variant="body1" color="text.secondary">
-              Yes! All paid plans come with a 14-day free trial. No credit card required to start.
+              Ja! Alle bezahlten Pläne bieten eine 14-tägige kostenlose Testversion. Keine Kreditkarte zum Start erforderlich.
             </Typography>
           </Box>
 
           <Box sx={{ textAlign: 'center', mt: 8 }}>
             <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-              Still have questions?
+              Noch Fragen?
             </Typography>
             <Button
               variant="outlined"
@@ -299,7 +299,7 @@ const PricingPage = () => {
                 },
               }}
             >
-              Contact Support
+              Support kontaktieren
             </Button>
           </Box>
         </Container>

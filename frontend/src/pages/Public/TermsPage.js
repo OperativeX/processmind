@@ -11,182 +11,182 @@ import PublicLayout from '../../layouts/PublicLayout';
 const TermsPage = () => {
   const sections = [
     {
-      title: '1. Acceptance of Terms',
+      title: '1. Annahme der Bedingungen',
       content: [
         {
-          text: 'By accessing or using ProcessLink ("Service"), you agree to be bound by these Terms of Service ("Terms"). If you disagree with any part of these terms, you do not have permission to access the Service.'
+          text: 'Durch den Zugriff auf oder die Nutzung von ProcessLink ("Dienst") erklären Sie sich mit diesen Nutzungsbedingungen ("Bedingungen") einverstanden. Wenn Sie mit einem Teil dieser Bedingungen nicht einverstanden sind, haben Sie keine Berechtigung, auf den Dienst zuzugreifen.'
         }
       ]
     },
     {
-      title: '2. Description of Service',
+      title: '2. Dienstbeschreibung',
       content: [
         {
-          text: 'ProcessLink is a SaaS platform that provides AI-powered video transcription, analysis, and knowledge management services. The Service includes video upload, processing, transcription using AI technology, automatic tagging, todo extraction, and visualization features.'
+          text: 'ProcessLink ist eine SaaS-Plattform, die KI-gestützte Videotranskription, Analyse und Wissensmanagemendienste bereitstellt. Der Dienst umfasst Video-Upload, Verarbeitung, Transkription mit KI-Technologie, automatisches Tagging, Todo-Extraktion und Visualisierungsfunktionen.'
         }
       ]
     },
     {
-      title: '3. User Accounts',
+      title: '3. Benutzerkonten',
       content: [
         {
-          subtitle: '3.1 Account Creation',
-          text: 'To use certain features of the Service, you must register for an account. You agree to provide accurate, current, and complete information during registration and to update such information to keep it accurate, current, and complete.'
+          subtitle: '3.1 Kontoerstellung',
+          text: 'Um bestimmte Funktionen des Dienstes zu nutzen, müssen Sie ein Konto registrieren. Sie verpflichten sich, während der Registrierung genaue, aktuelle und vollständige Informationen bereitzustellen und diese Informationen zu aktualisieren, um sie genau, aktuell und vollständig zu halten.'
         },
         {
-          subtitle: '3.2 Account Security',
-          text: 'You are responsible for safeguarding the password and for all activities that occur under your account. You must notify us immediately upon becoming aware of any breach of security or unauthorized use of your account.'
+          subtitle: '3.2 Kontosicherheit',
+          text: 'Sie sind für die Sicherung des Passworts und für alle Aktivitäten verantwortlich, die unter Ihrem Konto stattfinden. Sie müssen uns unverzüglich benachrichtigen, wenn Sie von einer Sicherheitsverletzung oder unbefugten Nutzung Ihres Kontos erfahren.'
         },
         {
-          subtitle: '3.3 Account Termination',
-          text: 'You may terminate your account at any time. We reserve the right to suspend or terminate your account if you violate these Terms or for any other reason at our sole discretion.'
+          subtitle: '3.3 Kontokündigung',
+          text: 'Sie können Ihr Konto jederzeit kündigen. Wir behalten uns das Recht vor, Ihr Konto zu sperren oder zu kündigen, wenn Sie gegen diese Bedingungen verstoßen oder aus anderen Gründen nach unserem alleinigen Ermessen.'
         }
       ]
     },
     {
-      title: '4. User Content',
+      title: '4. Nutzerinhalte',
       content: [
         {
-          subtitle: '4.1 Your Content',
-          text: 'You retain all rights to the video content and other materials you upload to the Service ("User Content"). By uploading User Content, you grant ProcessLink a limited, non-exclusive license to process, store, and display your content solely for the purpose of providing the Service.'
+          subtitle: '4.1 Ihre Inhalte',
+          text: 'Sie behalten alle Rechte an den Videoinhalten und anderen Materialien, die Sie auf den Dienst hochladen ("Nutzerinhalte"). Durch das Hochladen von Nutzerinhalten gewähren Sie ProcessLink eine begrenzte, nicht-exklusive Lizenz zur Verarbeitung, Speicherung und Anzeige Ihrer Inhalte ausschließlich zum Zweck der Bereitstellung des Dienstes.'
         },
         {
-          subtitle: '4.2 Content Restrictions',
-          text: 'You agree not to upload content that: (a) infringes any copyright, trademark, or other proprietary rights; (b) contains any defamatory, obscene, or unlawful material; (c) contains viruses or malicious code; (d) violates any applicable laws or regulations.'
+          subtitle: '4.2 Inhaltsbeschränkungen',
+          text: 'Sie verpflichten sich, keine Inhalte hochzuladen, die: (a) Urheberrechte, Marken oder andere Eigentumsrechte verletzen; (b) verleumderisches, obzsönes oder rechtswidriges Material enthalten; (c) Viren oder schädlichen Code enthalten; (d) gegen geltende Gesetze oder Vorschriften verstoßen.'
         },
         {
-          subtitle: '4.3 Content Removal',
-          text: 'We reserve the right to remove any User Content that violates these Terms or for any other reason at our discretion.'
+          subtitle: '4.3 Inhaltsentfernung',
+          text: 'Wir behalten uns das Recht vor, Nutzerinhalte zu entfernen, die gegen diese Bedingungen verstoßen oder aus anderen Gründen nach unserem Ermessen.'
         }
       ]
     },
     {
-      title: '5. Acceptable Use',
+      title: '5. Zulässige Nutzung',
       content: [
         {
-          text: 'You agree not to: (a) use the Service for any unlawful purpose; (b) attempt to interfere with or disrupt the Service; (c) attempt to access another user\'s account; (d) use automated scripts to collect information from the Service; (e) reverse engineer any aspect of the Service; (f) resell or redistribute the Service without our permission.'
+          text: 'Sie verpflichten sich, (a) den Dienst nicht für rechtswidrige Zwecke zu nutzen; (b) nicht zu versuchen, den Dienst zu stören oder zu unterbrechen; (c) nicht zu versuchen, auf das Konto eines anderen Nutzers zuzugreifen; (d) keine automatisierten Skripte zu verwenden, um Informationen vom Dienst zu sammeln; (e) keinen Aspekt des Dienstes zurückzuentwickeln; (f) den Dienst nicht ohne unsere Erlaubnis weiterzuverkaufen oder zu verteilen.'
         }
       ]
     },
     {
-      title: '6. Payment and Billing',
+      title: '6. Zahlung und Abrechnung',
       content: [
         {
-          subtitle: '6.1 Subscription Plans',
-          text: 'The Service is offered under various subscription plans. You agree to pay all fees associated with your selected plan.'
+          subtitle: '6.1 Abonnementpläne',
+          text: 'Der Dienst wird unter verschiedenen Abonnementplänen angeboten. Sie verpflichten sich, alle Gebühren zu zahlen, die mit Ihrem gewählten Plan verbunden sind.'
         },
         {
-          subtitle: '6.2 Payment Processing',
-          text: 'Payments are processed through third-party payment processors. By providing payment information, you authorize us to charge the applicable fees to your payment method.'
+          subtitle: '6.2 Zahlungsabwicklung',
+          text: 'Zahlungen werden über Drittanbieter-Zahlungsdienstleister abgewickelt. Durch die Bereitstellung von Zahlungsinformationen ermächtigen Sie uns, die anfallenden Gebühren von Ihrer Zahlungsmethode abzubuchen.'
         },
         {
-          subtitle: '6.3 Refunds',
-          text: 'Subscription fees are non-refundable except as required by law or as explicitly stated in our refund policy.'
+          subtitle: '6.3 Rückerstattungen',
+          text: 'Abonnementgebühren sind nicht erstattungsfähig, außer gesetzlich vorgeschrieben oder ausdrücklich in unserer Rückerstattungsrichtlinie angegeben.'
         },
         {
-          subtitle: '6.4 Price Changes',
-          text: 'We reserve the right to change our prices. We will provide advance notice of any price increases affecting your subscription.'
+          subtitle: '6.4 Preisänderungen',
+          text: 'Wir behalten uns das Recht vor, unsere Preise zu ändern. Wir werden Sie im Voraus über Preiserhöhungen informieren, die Ihr Abonnement betreffen.'
         }
       ]
     },
     {
-      title: '7. Intellectual Property',
+      title: '7. Geistiges Eigentum',
       content: [
         {
-          subtitle: '7.1 Our Property',
-          text: 'The Service and its original content (excluding User Content), features, and functionality are owned by ProcessLink and are protected by international copyright, trademark, and other intellectual property laws.'
+          subtitle: '7.1 Unser Eigentum',
+          text: 'Der Dienst und seine ursprünglichen Inhalte (ausgenommen Nutzerinhalte), Funktionen und Funktionalitäten sind Eigentum von ProcessLink und durch internationale Urheberrechts-, Marken- und andere Gesetze zum geistigen Eigentum geschützt.'
         },
         {
           subtitle: '7.2 Feedback',
-          text: 'Any feedback, suggestions, or ideas you provide about the Service may be used by us without any obligation to compensate you.'
+          text: 'Jegliches Feedback, Vorschläge oder Ideen, die Sie über den Dienst bereitstellen, können von uns ohne Verpflichtung zur Entschädigung verwendet werden.'
         }
       ]
     },
     {
-      title: '8. Privacy',
+      title: '8. Datenschutz',
       content: [
         {
-          text: 'Your use of the Service is also governed by our Privacy Policy, which is incorporated into these Terms by reference. Please review our Privacy Policy to understand our practices.'
+          text: 'Ihre Nutzung des Dienstes unterliegt auch unserer Datenschutzrichtlinie, die durch Verweis in diese Bedingungen aufgenommen wird. Bitte lesen Sie unsere Datenschutzrichtlinie, um unsere Praktiken zu verstehen.'
         }
       ]
     },
     {
-      title: '9. Third-Party Services',
+      title: '9. Dienste Dritter',
       content: [
         {
-          text: 'The Service may contain links to third-party websites or services that are not owned or controlled by ProcessLink. We have no control over and assume no responsibility for the content, privacy policies, or practices of any third-party websites or services.'
+          text: 'Der Dienst kann Links zu Websites oder Diensten Dritter enthalten, die nicht im Besitz oder unter der Kontrolle von ProcessLink sind. Wir haben keine Kontrolle über und übernehmen keine Verantwortung für die Inhalte, Datenschutzrichtlinien oder Praktiken von Websites oder Diensten Dritter.'
         }
       ]
     },
     {
-      title: '10. Disclaimers',
+      title: '10. Haftungsausschlüsse',
       content: [
         {
-          subtitle: '10.1 "As Is" Service',
-          text: 'The Service is provided on an "as is" and "as available" basis. We expressly disclaim all warranties of any kind, whether express or implied, including but not limited to the implied warranties of merchantability, fitness for a particular purpose, and non-infringement.'
+          subtitle: '10.1 Dienst "Wie besehen"',
+          text: 'Der Dienst wird "wie besehen" und "wie verfügbar" bereitgestellt. Wir schließen ausdrücklich alle Gewährleistungen jeglicher Art aus, ob ausdrücklich oder stillschweigend, einschließlich, aber nicht beschränkt auf die stillschweigenden Gewährleistungen der Marktgängigkeit, Eignung für einen bestimmten Zweck und Nichtverletzung.'
         },
         {
-          subtitle: '10.2 No Guarantee',
-          text: 'We do not guarantee that the Service will be uninterrupted, timely, secure, or error-free, or that defects will be corrected.'
+          subtitle: '10.2 Keine Garantie',
+          text: 'Wir garantieren nicht, dass der Dienst ununterbrochen, zeitnah, sicher oder fehlerfrei sein wird oder dass Mängel behoben werden.'
         }
       ]
     },
     {
-      title: '11. Limitation of Liability',
+      title: '11. Haftungsbeschränkung',
       content: [
         {
-          text: 'In no event shall ProcessLink, its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your use of the Service.'
+          text: 'In keinem Fall haften ProcessLink, seine Direktoren, Mitarbeiter, Partner, Vertreter, Lieferanten oder Tochtergesellschaften für indirekte, zufällige, besondere, Folge- oder Strafschäden, einschließlich, ohne Einschränkung, Gewinnverlust, Datenverlust, Nutzungsausfall, Verlust des Geschäftswerts oder andere immaterielle Verluste, die aus Ihrer Nutzung des Dienstes resultieren.'
         }
       ]
     },
     {
-      title: '12. Indemnification',
+      title: '12. Freistellung',
       content: [
         {
-          text: 'You agree to defend, indemnify, and hold harmless ProcessLink and its affiliates from and against any claims, liabilities, damages, judgments, awards, losses, costs, expenses, or fees arising out of or relating to your violation of these Terms or your use of the Service.'
+          text: 'Sie verpflichten sich, ProcessLink und seine verbundenen Unternehmen gegen alle Ansprüche, Verbindlichkeiten, Schäden, Urteile, Zuerkennungen, Verluste, Kosten, Ausgaben oder Gebühren zu verteidigen, zu entschädigen und schadlos zu halten, die aus oder im Zusammenhang mit Ihrer Verletzung dieser Bedingungen oder Ihrer Nutzung des Dienstes entstehen.'
         }
       ]
     },
     {
-      title: '13. Governing Law',
+      title: '13. Geltendes Recht',
       content: [
         {
-          text: 'These Terms shall be governed and construed in accordance with the laws of [Your Jurisdiction], without regard to its conflict of law provisions. Any legal action or proceeding shall be brought exclusively in the courts located in [Your Jurisdiction].'
+          text: 'Diese Bedingungen unterliegen den Gesetzen von [Ihre Rechtsordnung] und sind nach diesen auszulegen, ohne Berücksichtigung der Kollisionsnormen. Rechtliche Schritte oder Verfahren sind ausschließlich vor den Gerichten in [Ihre Rechtsordnung] zu erheben.'
         }
       ]
     },
     {
-      title: '14. Changes to Terms',
+      title: '14. Änderungen der Bedingungen',
       content: [
         {
-          text: 'We reserve the right to modify these Terms at any time. If we make material changes, we will notify you by email or by posting a notice on the Service. Your continued use of the Service after any such changes constitutes your acceptance of the new Terms.'
+          text: 'Wir behalten uns das Recht vor, diese Bedingungen jederzeit zu ändern. Bei wesentlichen Änderungen werden wir Sie per E-Mail oder durch eine Benachrichtigung im Dienst informieren. Ihre fortgesetzte Nutzung des Dienstes nach solchen Änderungen gilt als Annahme der neuen Bedingungen.'
         }
       ]
     },
     {
-      title: '15. Severability',
+      title: '15. Salvatorische Klausel',
       content: [
         {
-          text: 'If any provision of these Terms is held to be unenforceable or invalid, such provision will be changed and interpreted to accomplish the objectives of such provision to the greatest extent possible under applicable law, and the remaining provisions will continue in full force and effect.'
+          text: 'Sollte eine Bestimmung dieser Bedingungen als nicht durchsetzbar oder ungültig erachtet werden, wird diese Bestimmung geändert und ausgelegt, um die Ziele dieser Bestimmung im größtmöglichen Umfang gemäß geltendem Recht zu erreichen, und die übrigen Bestimmungen bleiben in vollem Umfang gültig.'
         }
       ]
     },
     {
-      title: '16. Entire Agreement',
+      title: '16. Gesamte Vereinbarung',
       content: [
         {
-          text: 'These Terms constitute the entire agreement between you and ProcessLink regarding the use of the Service, superseding any prior agreements between you and ProcessLink relating to the Service.'
+          text: 'Diese Bedingungen stellen die gesamte Vereinbarung zwischen Ihnen und ProcessLink bezüglich der Nutzung des Dienstes dar und ersetzen alle früheren Vereinbarungen zwischen Ihnen und ProcessLink in Bezug auf den Dienst.'
         }
       ]
     },
     {
-      title: '17. Contact Information',
+      title: '17. Kontaktinformationen',
       content: [
         {
-          text: 'If you have any questions about these Terms, please contact us at:'
+          text: 'Wenn Sie Fragen zu diesen Bedingungen haben, kontaktieren Sie uns bitte unter:'
         },
         {
-          text: 'Email: legal@processlink.ai\nAddress: ProcessLink, Inc.\n[Your Address]\n[City, State, ZIP]'
+          text: 'E-Mail: rechtliches@processlink.de\nAdresse: ProcessLink GmbH\n[Ihre Adresse]\n[Stadt, PLZ]'
         }
       ]
     }
@@ -209,7 +209,7 @@ const TermsPage = () => {
               WebkitTextFillColor: 'transparent',
             }}
           >
-            Terms of Service
+            Nutzungsbedingungen
           </Typography>
           <Typography
             variant="h6"
@@ -217,7 +217,7 @@ const TermsPage = () => {
             color="text.secondary"
             sx={{ mb: 4 }}
           >
-            Effective Date: December 2024
+            Gültig ab: Dezember 2024
           </Typography>
           <Typography
             variant="body1"
@@ -225,8 +225,8 @@ const TermsPage = () => {
             color="text.secondary"
             sx={{ maxWidth: '800px', mx: 'auto' }}
           >
-            Please read these Terms of Service carefully before using ProcessLink. 
-            These terms govern your use of our platform and services.
+            Bitte lesen Sie diese Nutzungsbedingungen sorgfältig durch, bevor Sie ProcessLink nutzen. 
+            Diese Bedingungen regeln Ihre Nutzung unserer Plattform und Dienste.
           </Typography>
         </Container>
       </Box>
@@ -291,12 +291,12 @@ const TermsPage = () => {
             }}
           >
             <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-              Questions About Our Terms?
+              Fragen zu unseren Bedingungen?
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-              If you have any questions or need clarification about our Terms of Service, 
-              our team is here to help. We believe in transparency and are happy to explain 
-              any aspect of these terms.
+              Wenn Sie Fragen haben oder Klärung zu unseren Nutzungsbedingungen benötigen, 
+              ist unser Team hier, um zu helfen. Wir glauben an Transparenz und erklären gerne 
+              jeden Aspekt dieser Bedingungen.
             </Typography>
             <Link
               href="/contact"
@@ -309,7 +309,7 @@ const TermsPage = () => {
                 },
               }}
             >
-              Contact Our Legal Team →
+              Rechtsteam kontaktieren →
             </Link>
           </Box>
         </Container>

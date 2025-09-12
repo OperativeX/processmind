@@ -17,29 +17,29 @@ const PublicFooter = () => {
   const currentYear = new Date().getFullYear();
 
   const footerLinks = {
-    product: [
-      { label: 'Features', path: '/features' },
-      { label: 'Pricing', path: '/pricing' },
-      { label: 'Use Cases', path: '/features#use-cases' },
-      { label: 'Integrations', path: '/features#integrations' },
+    produkt: [
+      { label: 'Funktionen', path: '/features' },
+      { label: 'Preise', path: '/pricing' },
+      { label: 'Anwendungsfälle', path: '/features#use-cases' },
+      { label: 'Integrationen', path: '/features#integrations' },
     ],
-    company: [
-      { label: 'About', path: '/about' },
-      { label: 'Contact', path: '/contact' },
+    unternehmen: [
+      { label: 'Über uns', path: '/about' },
+      { label: 'Kontakt', path: '/contact' },
       { label: 'Blog', path: '/blog' },
-      { label: 'Careers', path: '/careers' },
+      { label: 'Karriere', path: '/careers' },
     ],
-    resources: [
-      { label: 'Documentation', path: '/docs' },
-      { label: 'API Reference', path: '/api' },
+    ressourcen: [
+      { label: 'Dokumentation', path: '/docs' },
+      { label: 'API-Referenz', path: '/api' },
       { label: 'Community', path: '/community' },
       { label: 'Support', path: '/support' },
     ],
-    legal: [
-      { label: 'Privacy Policy', path: '/privacy' },
-      { label: 'Terms of Service', path: '/terms' },
-      { label: 'Cookie Policy', path: '/cookies' },
-      { label: 'GDPR', path: '/gdpr' },
+    rechtliches: [
+      { label: 'Datenschutzrichtlinie', path: '/privacy' },
+      { label: 'Nutzungsbedingungen', path: '/terms' },
+      { label: 'Cookie-Richtlinie', path: '/cookies' },
+      { label: 'DSGVO', path: '/gdpr' },
     ],
   };
 
@@ -73,7 +73,7 @@ const PublicFooter = () => {
                 </Typography>
               </Box>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-                Transform your video content into structured knowledge with AI-powered transcription and analysis.
+                Verwandeln Sie Ihre Videoinhalte in strukturiertes Wissen mit KI-gestützter Transkription und Analyse.
               </Typography>
               <Box sx={{ display: 'flex', gap: 1 }}>
                 <IconButton
@@ -161,7 +161,7 @@ const PublicFooter = () => {
           }}
         >
           <Typography variant="body2" color="text.secondary">
-            © {currentYear} ProcessLink. All rights reserved.
+            © {currentYear} ProcessLink. Alle Rechte vorbehalten.
           </Typography>
           <Box sx={{ display: 'flex', gap: 3 }}>
             <Typography
@@ -174,7 +174,7 @@ const PublicFooter = () => {
                 '&:hover': { color: 'primary.main' },
               }}
             >
-              Privacy
+              Datenschutz
             </Typography>
             <Typography
               component={Link}
@@ -186,7 +186,7 @@ const PublicFooter = () => {
                 '&:hover': { color: 'primary.main' },
               }}
             >
-              Terms
+              Nutzungsbedingungen
             </Typography>
             <Typography
               component={Link}

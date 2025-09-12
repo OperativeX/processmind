@@ -25,31 +25,31 @@ const AboutPage = () => {
   const values = [
     {
       icon: <AutoAwesomeIcon sx={{ fontSize: 32 }} />,
-      title: 'Innovation First',
-      description: 'We leverage cutting-edge AI technology to transform how people interact with video content.',
+      title: 'Innovation im Vordergrund',
+      description: 'Wir nutzen modernste KI-Technologie, um die Art und Weise zu transformieren, wie Menschen mit Videoinhalten interagieren.',
     },
     {
       icon: <SecurityIcon sx={{ fontSize: 32 }} />,
-      title: 'Privacy by Design',
-      description: 'Your data belongs to you. We build with privacy and security at the core of everything.',
+      title: 'Datenschutz von Anfang an',
+      description: 'Ihre Daten gehören Ihnen. Wir bauen mit Datenschutz und Sicherheit im Kern all unserer Entwicklungen.',
     },
     {
       icon: <GroupsIcon sx={{ fontSize: 32 }} />,
-      title: 'User-Centric',
-      description: 'Every feature is designed with our users in mind, focusing on real workflows and needs.',
+      title: 'Nutzerzentriert',
+      description: 'Jede Funktion wird mit unseren Nutzern im Blick entwickelt, mit Fokus auf echte Workflows und Bedürfnisse.',
     },
     {
       icon: <RocketLaunchIcon sx={{ fontSize: 32 }} />,
-      title: 'Continuous Growth',
-      description: 'We constantly evolve and improve, driven by user feedback and technological advances.',
+      title: 'Ständiges Wachstum',
+      description: 'Wir entwickeln uns ständig weiter und verbessern uns, angetrieben durch Nutzerfeedback und technologische Fortschritte.',
     },
   ];
 
   const stats = [
-    { value: '50K+', label: 'Videos Processed' },
-    { value: '10K+', label: 'Active Users' },
-    { value: '99.9%', label: 'Uptime' },
-    { value: '4.9/5', label: 'User Rating' },
+    { value: '50K+', label: 'Verarbeitete Videos' },
+    { value: '10K+', label: 'Aktive Nutzer' },
+    { value: '99.9%', label: 'Verfügbarkeit' },
+    { value: '4.9/5', label: 'Nutzerbewertung' },
   ];
 
   return (
@@ -92,7 +92,7 @@ const AboutPage = () => {
               WebkitTextFillColor: 'transparent',
             }}
           >
-            Building the Future of Video Knowledge
+            Die Zukunft des Video-Wissens gestalten
           </Typography>
           <Typography
             variant="h5"
@@ -100,8 +100,8 @@ const AboutPage = () => {
             color="text.secondary"
             sx={{ mb: 8, fontWeight: 400, maxWidth: '800px', mx: 'auto' }}
           >
-            ProcessLink was born from a simple idea: what if every video could become a searchable, 
-            organized knowledge asset? We're making that vision a reality.
+            ProcessLink entstand aus einer einfachen Idee: Was wäre, wenn jedes Video zu einem durchsuchbaren, 
+            organisierten Wissensgut werden könnte? Wir machen diese Vision zur Realität.
           </Typography>
         </Container>
       </Box>
@@ -119,31 +119,31 @@ const AboutPage = () => {
                   fontSize: { xs: '2rem', md: '2.5rem' },
                 }}
               >
-                Our Mission
+                Unsere Mission
               </Typography>
               <Typography
                 variant="body1"
                 color="text.secondary"
                 sx={{ mb: 3, lineHeight: 1.8 }}
               >
-                In a world overflowing with video content, valuable insights get lost in hours of footage. 
-                ProcessLink exists to unlock this hidden knowledge, making it accessible, searchable, and actionable.
+                In einer Welt voller Videoinhalte gehen wertvolle Erkenntnisse in stundenlangem Filmmaterial verloren. 
+                ProcessLink existiert, um dieses verborgene Wissen freizusetzen und es zugänglich, durchsuchbar und nutzbar zu machen.
               </Typography>
               <Typography
                 variant="body1"
                 color="text.secondary"
                 sx={{ mb: 3, lineHeight: 1.8 }}
               >
-                We believe that AI should augment human intelligence, not replace it. Our tools help professionals 
-                extract maximum value from their video content, whether it's meetings, lectures, tutorials, or research.
+                Wir glauben, dass KI die menschliche Intelligenz ergänzen und nicht ersetzen sollte. Unsere Tools helfen Profis, 
+                maximalen Wert aus ihren Videoinhalten zu ziehen, seien es Meetings, Vorlesungen, Tutorials oder Forschung.
               </Typography>
               <Typography
                 variant="body1"
                 color="text.secondary"
                 sx={{ lineHeight: 1.8 }}
               >
-                By combining state-of-the-art AI with thoughtful design, we're building a second brain for video content - 
-                one that remembers everything, connects ideas, and helps you work smarter.
+                Durch die Kombination von modernster KI mit durchdachtem Design bauen wir ein zweites Gehirn für Videoinhalte - 
+                eines, das alles speichert, Ideen verbindet und Ihnen hilft, intelligenter zu arbeiten.
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
@@ -162,8 +162,8 @@ const AboutPage = () => {
                   justifyContent: 'center',
                 }}
               >
-                <Typography variant="h1" sx={{ fontSize: '120px', opacity: 0.1 }}>
-                  🧠
+                <Typography variant="h1" sx={{ fontSize: '120px', opacity: 0.1, fontWeight: 100 }}>
+                  AI
                 </Typography>
               </Box>
             </Grid>
@@ -179,7 +179,7 @@ const AboutPage = () => {
             align="center"
             sx={{ mb: 8, fontWeight: 600 }}
           >
-            Our Values
+            Unsere Werte
           </Typography>
           <Grid container spacing={4}>
             {values.map((value, index) => (
@@ -231,7 +231,7 @@ const AboutPage = () => {
             align="center"
             sx={{ mb: 8, fontWeight: 600 }}
           >
-            ProcessLink in Numbers
+            ProcessLink in Zahlen
           </Typography>
           <Grid container spacing={4}>
             {stats.map((stat, index) => (
@@ -271,15 +271,15 @@ const AboutPage = () => {
                 fontSize: { xs: '1.75rem', md: '2.25rem' },
               }}
             >
-              Join Us on This Journey
+              Begleiten Sie uns auf dieser Reise
             </Typography>
             <Typography
               variant="h6"
               color="text.secondary"
               sx={{ mb: 5, fontWeight: 400 }}
             >
-              Be part of the revolution in video knowledge management. 
-              Start transforming your content today.
+              Seien Sie Teil der Revolution im Video-Wissensmanagement. 
+              Beginnen Sie noch heute, Ihre Inhalte zu transformieren.
             </Typography>
             <Box sx={{ display: 'flex', gap: 3, justifyContent: 'center', flexWrap: 'wrap' }}>
               <Button
@@ -296,7 +296,7 @@ const AboutPage = () => {
                   },
                 }}
               >
-                Get Started Free
+                Kostenlos starten
               </Button>
               <Button
                 variant="outlined"
@@ -313,7 +313,7 @@ const AboutPage = () => {
                   },
                 }}
               >
-                Contact Us
+                Kontakt aufnehmen
               </Button>
             </Box>
           </Box>

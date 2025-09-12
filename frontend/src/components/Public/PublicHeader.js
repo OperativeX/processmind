@@ -27,10 +27,10 @@ const PublicHeader = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const menuItems = [
-    { label: 'Features', path: '/features' },
-    { label: 'Pricing', path: '/pricing' },
-    { label: 'About', path: '/about' },
-    { label: 'Contact', path: '/contact' },
+    { label: 'Funktionen', path: '/features' },
+    { label: 'Preise', path: '/pricing' },
+    { label: 'Über uns', path: '/about' },
+    { label: 'Kontakt', path: '/contact' },
   ];
 
   const handleNavigate = (path) => {
@@ -113,7 +113,7 @@ const PublicHeader = () => {
                   },
                 }}
               >
-                Login
+                Anmelden
               </Button>
               <Button
                 variant="contained"
@@ -125,7 +125,7 @@ const PublicHeader = () => {
                   },
                 }}
               >
-                Get Started
+                Jetzt starten
               </Button>
             </Box>
           </>
@@ -161,7 +161,7 @@ const PublicHeader = () => {
       >
         <Box sx={{ p: 2 }}>
           <Typography variant="h6" sx={{ mb: 3, fontWeight: 700 }}>
-            Menu
+            Menü
           </Typography>
           <List>
             {menuItems.map((item) => (
@@ -178,7 +178,7 @@ const PublicHeader = () => {
               variant="outlined"
               onClick={() => handleNavigate('/login')}
             >
-              Login
+              Anmelden
             </Button>
             <Button
               fullWidth

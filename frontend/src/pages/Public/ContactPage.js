@@ -34,38 +34,38 @@ const ContactPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const subjects = [
-    { value: 'general', label: 'General Inquiry' },
-    { value: 'support', label: 'Technical Support' },
-    { value: 'sales', label: 'Sales & Pricing' },
-    { value: 'enterprise', label: 'Enterprise Solutions' },
-    { value: 'feature', label: 'Feature Request' },
-    { value: 'bug', label: 'Bug Report' },
+    { value: 'general', label: 'Allgemeine Anfrage' },
+    { value: 'support', label: 'Technischer Support' },
+    { value: 'sales', label: 'Vertrieb & Preise' },
+    { value: 'enterprise', label: 'Enterprise Lösungen' },
+    { value: 'feature', label: 'Feature-Anfrage' },
+    { value: 'bug', label: 'Fehlermeldung' },
   ];
 
   const contactOptions = [
     {
       icon: <EmailIcon sx={{ fontSize: 32 }} />,
-      title: 'Email Us',
-      description: 'Get in touch for general inquiries',
-      contact: 'hello@processmind.ai',
+      title: 'E-Mail',
+      description: 'Kontaktieren Sie uns für allgemeine Anfragen',
+      contact: 'hallo@processlink.de',
     },
     {
       icon: <ChatIcon sx={{ fontSize: 32 }} />,
-      title: 'Live Chat',
-      description: 'Chat with our support team',
-      contact: 'Available Mon-Fri, 9AM-6PM EST',
+      title: 'Live-Chat',
+      description: 'Chatten Sie mit unserem Support-Team',
+      contact: 'Verfügbar Mo-Fr, 9-18 Uhr MEZ',
     },
     {
       icon: <HelpIcon sx={{ fontSize: 32 }} />,
-      title: 'Help Center',
-      description: 'Browse our documentation',
-      contact: 'docs.processmind.ai',
+      title: 'Hilfecenter',
+      description: 'Durchsuchen Sie unsere Dokumentation',
+      contact: 'docs.processlink.de',
     },
     {
       icon: <BusinessIcon sx={{ fontSize: 32 }} />,
       title: 'Enterprise',
-      description: 'Custom solutions for large teams',
-      contact: 'enterprise@processmind.ai',
+      description: 'Maßgeschneiderte Lösungen für große Teams',
+      contact: 'enterprise@processlink.de',
     },
   ];
 
@@ -138,7 +138,7 @@ const ContactPage = () => {
               WebkitTextFillColor: 'transparent',
             }}
           >
-            Get in Touch
+            Kontakt aufnehmen
           </Typography>
           <Typography
             variant="h5"
@@ -146,7 +146,7 @@ const ContactPage = () => {
             color="text.secondary"
             sx={{ mb: 8, fontWeight: 400, maxWidth: '600px', mx: 'auto' }}
           >
-            Have a question or need help? We're here to support you on your journey.
+            Haben Sie eine Frage oder benötigen Sie Hilfe? Wir sind hier, um Sie auf Ihrem Weg zu unterstützen.
           </Typography>
         </Container>
       </Box>
@@ -220,7 +220,7 @@ const ContactPage = () => {
             align="center"
             sx={{ mb: 6, fontWeight: 600 }}
           >
-            Send Us a Message
+            Senden Sie uns eine Nachricht
           </Typography>
           
           <Card
@@ -238,7 +238,7 @@ const ContactPage = () => {
                   <TextField
                     fullWidth
                     required
-                    label="Your Name"
+                    label="Ihr Name"
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
@@ -250,7 +250,7 @@ const ContactPage = () => {
                     fullWidth
                     required
                     type="email"
-                    label="Email Address"
+                    label="E-Mail-Adresse"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
@@ -260,7 +260,7 @@ const ContactPage = () => {
                 <Grid item xs={12} md={6}>
                   <TextField
                     fullWidth
-                    label="Company (Optional)"
+                    label="Unternehmen (Optional)"
                     name="company"
                     value={formData.company}
                     onChange={handleChange}
@@ -272,7 +272,7 @@ const ContactPage = () => {
                     fullWidth
                     required
                     select
-                    label="Subject"
+                    label="Betreff"
                     name="subject"
                     value={formData.subject}
                     onChange={handleChange}
@@ -291,12 +291,12 @@ const ContactPage = () => {
                     required
                     multiline
                     rows={6}
-                    label="Message"
+                    label="Nachricht"
                     name="message"
                     value={formData.message}
                     onChange={handleChange}
                     variant="outlined"
-                    placeholder="Please describe how we can help you..."
+                    placeholder="Bitte beschreiben Sie, wie wir Ihnen helfen können..."
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -315,7 +315,7 @@ const ContactPage = () => {
                         },
                       }}
                     >
-                      {isSubmitting ? 'Sending...' : 'Send Message'}
+                      {isSubmitting ? 'Wird gesendet...' : 'Nachricht senden'}
                     </Button>
                   </Box>
                 </Grid>
@@ -326,7 +326,7 @@ const ContactPage = () => {
           {/* FAQ Link */}
           <Box sx={{ textAlign: 'center', mt: 8 }}>
             <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
-              Looking for quick answers?
+              Suchen Sie schnelle Antworten?
             </Typography>
             <Button
               variant="outlined"
@@ -340,7 +340,7 @@ const ContactPage = () => {
                 },
               }}
             >
-              Browse FAQ
+              FAQ durchsuchen
             </Button>
           </Box>
         </Container>
@@ -354,7 +354,7 @@ const ContactPage = () => {
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
         <Alert severity="success" onClose={() => setShowSuccess(false)}>
-          Thank you for your message! We'll get back to you within 24 hours.
+          Vielen Dank für Ihre Nachricht! Wir melden uns innerhalb von 24 Stunden bei Ihnen.
         </Alert>
       </Snackbar>
 
@@ -365,7 +365,7 @@ const ContactPage = () => {
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
         <Alert severity="error" onClose={() => setShowError(false)}>
-          Something went wrong. Please try again or email us directly.
+          Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut oder senden Sie uns direkt eine E-Mail.
         </Alert>
       </Snackbar>
     </PublicLayout>

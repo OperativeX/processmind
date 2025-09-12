@@ -28,33 +28,33 @@ const LandingPage = () => {
   const features = [
     {
       icon: <AutoAwesomeIcon sx={{ fontSize: 40 }} />,
-      title: 'AI-Powered Transcription',
-      description: 'Transform videos into accurate, timestamped transcripts using OpenAI Whisper technology.',
+      title: 'KI-gestützte Transkription',
+      description: 'Wandeln Sie Videos mit OpenAI Whisper-Technologie in präzise, zeitgestempelte Transkripte um.',
     },
     {
       icon: <AccountTreeIcon sx={{ fontSize: 40 }} />,
-      title: 'Intelligent Organization',
-      description: 'Auto-generated tags, todo lists, and summaries help you structure your knowledge.',
+      title: 'Intelligente Organisation',
+      description: 'Automatisch generierte Tags, Todo-Listen und Zusammenfassungen helfen Ihnen, Ihr Wissen zu strukturieren.',
     },
     {
       icon: <AnalyticsIcon sx={{ fontSize: 40 }} />,
-      title: 'Visual Knowledge Graph',
-      description: 'See connections between your content with interactive graph visualization.',
+      title: 'Visueller Wissensgraph',
+      description: 'Erkennen Sie Verbindungen zwischen Ihren Inhalten mit interaktiver Graph-Visualisierung.',
     },
     {
       icon: <SecurityIcon sx={{ fontSize: 40 }} />,
-      title: 'Privacy First',
-      description: 'Your data stays yours. Enterprise-grade security with full control over your content.',
+      title: 'Datenschutz im Fokus',
+      description: 'Ihre Daten bleiben Ihre Daten. Sicherheit auf Unternehmensniveau mit voller Kontrolle über Ihre Inhalte.',
     },
     {
       icon: <IntegrationInstructionsIcon sx={{ fontSize: 40 }} />,
-      title: 'Seamless Integration',
-      description: 'Export to Obsidian, Notion, or use our API to integrate with your workflow.',
+      title: 'Nahtlose Integration',
+      description: 'Exportieren Sie nach Obsidian, Notion oder nutzen Sie unsere API zur Integration in Ihren Workflow.',
     },
     {
       icon: <GroupIcon sx={{ fontSize: 40 }} />,
-      title: 'Team Collaboration',
-      description: 'Share insights, collaborate on projects, and build knowledge together.',
+      title: 'Team-Zusammenarbeit',
+      description: 'Teilen Sie Erkenntnisse, arbeiten Sie gemeinsam an Projekten und bauen Sie Wissen zusammen auf.',
     },
   ];
 
@@ -118,15 +118,15 @@ const LandingPage = () => {
                   WebkitTextFillColor: 'transparent',
                 }}
               >
-                Transform Videos into Structured Knowledge
+                Verwandeln Sie Videos in strukturiertes Wissen
               </Typography>
               <Typography
                 variant="h5"
                 color="text.secondary"
                 sx={{ mb: 4, fontWeight: 400, lineHeight: 1.6 }}
               >
-                ProcessLink uses AI to transcribe, analyze, and organize your video content into actionable insights. 
-                Build your second brain with automatic tagging, todo extraction, and knowledge graphs.
+                ProcessLink nutzt KI, um Ihre Videoinhalte zu transkribieren, analysieren und in verwertbare Erkenntnisse zu organisieren. 
+                Bauen Sie Ihr zweites Gehirn mit automatischem Tagging, Todo-Extraktion und Wissensgraphen auf.
               </Typography>
               <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
                 <Button
@@ -142,7 +142,7 @@ const LandingPage = () => {
                     },
                   }}
                 >
-                  Start Free Trial
+                  Kostenlos testen
                 </Button>
                 <Button
                   variant="outlined"
@@ -159,7 +159,7 @@ const LandingPage = () => {
                     },
                   }}
                 >
-                  Watch Demo
+                  Demo ansehen
                 </Button>
               </Box>
             </Grid>
@@ -213,7 +213,7 @@ const LandingPage = () => {
               fontSize: { xs: '2rem', md: '2.5rem' },
             }}
           >
-            Everything you need to manage video knowledge
+            Alles was Sie für die Verwaltung von Videowissen benötigen
           </Typography>
           <Typography
             variant="h6"
@@ -221,7 +221,7 @@ const LandingPage = () => {
             color="text.secondary"
             sx={{ mb: 8, fontWeight: 400 }}
           >
-            Powerful features designed to help you extract maximum value from your video content
+            Leistungsstarke Funktionen, die Ihnen helfen, maximalen Wert aus Ihren Videoinhalten zu ziehen
           </Typography>
 
           <Grid container spacing={4}>
@@ -293,14 +293,14 @@ const LandingPage = () => {
                 fontSize: { xs: '1.75rem', md: '2.25rem' },
               }}
             >
-              Ready to transform your video workflow?
+              Bereit, Ihren Video-Workflow zu transformieren?
             </Typography>
             <Typography
               variant="h6"
               color="text.secondary"
               sx={{ mb: 5, fontWeight: 400 }}
             >
-              Join thousands of professionals using ProcessLink to unlock insights from their video content.
+              Schließen Sie sich Tausenden von Profis an, die ProcessLink nutzen, um Erkenntnisse aus ihren Videoinhalten zu gewinnen.
             </Typography>
             <Box sx={{ display: 'flex', gap: 3, justifyContent: 'center', flexWrap: 'wrap' }}>
               <Button
@@ -317,7 +317,7 @@ const LandingPage = () => {
                   },
                 }}
               >
-                Start Your Free Trial
+                Kostenlos testen
               </Button>
               <Button
                 variant="outlined"
@@ -334,7 +334,7 @@ const LandingPage = () => {
                   },
                 }}
               >
-                View Pricing
+                Preise anzeigen
               </Button>
             </Box>
           </Box>

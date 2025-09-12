@@ -28,102 +28,102 @@ const FeaturesPage = () => {
 
   const featureCategories = [
     {
-      title: 'Transcription',
+      title: 'Transkription',
       icon: <TranscriptIcon />,
       features: [
         {
           title: 'OpenAI Whisper Integration',
-          description: 'State-of-the-art speech recognition for accurate transcriptions in multiple languages.',
+          description: 'Modernste Spracherkennung für präzise Transkriptionen in mehreren Sprachen.',
         },
         {
-          title: 'Timestamped Segments',
-          description: 'Navigate your content easily with precise timestamps for every spoken segment.',
+          title: 'Zeitgestempelte Segmente',
+          description: 'Navigieren Sie einfach durch Ihre Inhalte mit präzisen Zeitstempeln für jedes gesprochene Segment.',
         },
         {
-          title: 'Speaker Diarization',
-          description: 'Automatically identify and label different speakers in your videos.',
+          title: 'Sprecheridentifikation',
+          description: 'Identifizieren und kennzeichnen Sie automatisch verschiedene Sprecher in Ihren Videos.',
         },
         {
-          title: 'Custom Vocabulary',
-          description: 'Add industry-specific terms and names for improved accuracy.',
+          title: 'Benutzerdefiniertes Vokabular',
+          description: 'Fügen Sie branchenspezifische Begriffe und Namen für verbesserte Genauigkeit hinzu.',
         },
       ],
     },
     {
-      title: 'AI Analysis',
+      title: 'KI-Analyse',
       icon: <SmartToyIcon />,
       features: [
         {
-          title: 'Automatic Tagging',
-          description: 'AI extracts relevant tags and topics from your content for easy categorization.',
+          title: 'Automatisches Tagging',
+          description: 'KI extrahiert relevante Tags und Themen aus Ihren Inhalten zur einfachen Kategorisierung.',
         },
         {
-          title: 'Todo Extraction',
-          description: 'Automatically identify action items and tasks mentioned in your videos.',
+          title: 'Todo-Extraktion',
+          description: 'Identifizieren Sie automatisch Aktionspunkte und Aufgaben, die in Ihren Videos erwähnt werden.',
         },
         {
-          title: 'Smart Summaries',
-          description: 'Get concise, AI-generated summaries of your video content.',
+          title: 'Intelligente Zusammenfassungen',
+          description: 'Erhalten Sie prägnante, KI-generierte Zusammenfassungen Ihrer Videoinhalte.',
         },
         {
-          title: 'Sentiment Analysis',
-          description: 'Understand the tone and emotion in your video content.',
+          title: 'Stimmungsanalyse',
+          description: 'Verstehen Sie Ton und Emotionen in Ihren Videoinhalten.',
         },
       ],
     },
     {
-      title: 'Organization',
+      title: 'Organisation',
       icon: <HubIcon />,
       features: [
         {
-          title: 'Knowledge Graph',
-          description: 'Visualize connections between your videos through interactive graph views.',
+          title: 'Wissensgraph',
+          description: 'Visualisieren Sie Verbindungen zwischen Ihren Videos durch interaktive Graph-Ansichten.',
         },
         {
-          title: 'Smart Collections',
-          description: 'Organize videos into collections based on tags, topics, or custom criteria.',
+          title: 'Intelligente Sammlungen',
+          description: 'Organisieren Sie Videos in Sammlungen basierend auf Tags, Themen oder benutzerdefinierten Kriterien.',
         },
         {
-          title: 'Advanced Search',
-          description: 'Find any content instantly with full-text search across all transcripts.',
+          title: 'Erweiterte Suche',
+          description: 'Finden Sie jeden Inhalt sofort mit Volltextsuche über alle Transkripte.',
         },
         {
-          title: 'Custom Metadata',
-          description: 'Add custom fields and properties to organize content your way.',
+          title: 'Benutzerdefinierte Metadaten',
+          description: 'Fügen Sie benutzerdefinierte Felder und Eigenschaften hinzu, um Inhalte nach Ihren Wünschen zu organisieren.',
         },
       ],
     },
     {
-      title: 'Collaboration',
+      title: 'Zusammenarbeit',
       icon: <ShareIcon />,
       features: [
         {
-          title: 'Team Workspaces',
-          description: 'Create shared workspaces for teams to collaborate on video content.',
+          title: 'Team-Arbeitsbereiche',
+          description: 'Erstellen Sie gemeinsame Arbeitsbereiche für Teams zur Zusammenarbeit an Videoinhalten.',
         },
         {
-          title: 'Secure Sharing',
-          description: 'Share videos and insights with controlled access and permissions.',
+          title: 'Sicheres Teilen',
+          description: 'Teilen Sie Videos und Erkenntnisse mit kontrolliertem Zugriff und Berechtigungen.',
         },
         {
-          title: 'Comments & Annotations',
-          description: 'Add comments and annotations to specific moments in videos.',
+          title: 'Kommentare & Anmerkungen',
+          description: 'Fügen Sie Kommentare und Anmerkungen zu bestimmten Momenten in Videos hinzu.',
         },
         {
-          title: 'Version Control',
-          description: 'Track changes and maintain version history for collaborative editing.',
+          title: 'Versionskontrolle',
+          description: 'Verfolgen Sie Änderungen und pflegen Sie die Versionshistorie für kollaboratives Bearbeiten.',
         },
       ],
     },
   ];
 
   const integrations = [
-    { name: 'Obsidian', logo: '🔮' },
-    { name: 'Notion', logo: '📝' },
-    { name: 'Slack', logo: '💬' },
-    { name: 'Google Drive', logo: '☁️' },
-    { name: 'Zapier', logo: '⚡' },
-    { name: 'API', logo: '🔧' },
+    { name: 'Obsidian', logo: 'O' },
+    { name: 'Notion', logo: 'N' },
+    { name: 'Slack', logo: 'S' },
+    { name: 'Google Drive', logo: 'G' },
+    { name: 'Zapier', logo: 'Z' },
+    { name: 'API', logo: 'A' },
   ];
 
   return (
@@ -143,7 +143,7 @@ const FeaturesPage = () => {
               WebkitTextFillColor: 'transparent',
             }}
           >
-            Powerful Features for Video Intelligence
+            Leistungsstarke Funktionen für Video-Intelligenz
           </Typography>
           <Typography
             variant="h5"
@@ -151,7 +151,7 @@ const FeaturesPage = () => {
             color="text.secondary"
             sx={{ mb: 8, fontWeight: 400, maxWidth: '800px', mx: 'auto' }}
           >
-            Everything you need to transform raw video content into structured, actionable knowledge.
+            Alles, was Sie benötigen, um rohe Videoinhalte in strukturiertes, verwertbares Wissen zu verwandeln.
           </Typography>
         </Container>
       </Box>
@@ -224,7 +224,7 @@ const FeaturesPage = () => {
       <Box sx={{ py: 8, backgroundColor: 'background.default' }}>
         <Container maxWidth="lg">
           <Typography variant="h3" align="center" sx={{ mb: 8, fontWeight: 600 }}>
-            Why Choose ProcessLink?
+            Warum ProcessLink wählen?
           </Typography>
           <Grid container spacing={4}>
             <Grid item xs={12} md={4}>
@@ -247,10 +247,10 @@ const FeaturesPage = () => {
                   <SpeedIcon sx={{ fontSize: 40, color: 'primary.main' }} />
                 </Box>
                 <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-                  Lightning Fast
+                  Blitzschnell
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Process hours of video content in minutes with our optimized pipeline and priority processing.
+                  Verarbeiten Sie stundenlange Videoinhalte in Minuten mit unserer optimierten Pipeline und priorisierter Verarbeitung.
                 </Typography>
               </Box>
             </Grid>
@@ -274,10 +274,10 @@ const FeaturesPage = () => {
                   <SmartToyIcon sx={{ fontSize: 40, color: 'success.main' }} />
                 </Box>
                 <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-                  AI-Powered
+                  KI-gestützt
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Leverage cutting-edge AI models for transcription, analysis, and intelligent organization.
+                  Nutzen Sie modernste KI-Modelle für Transkription, Analyse und intelligente Organisation.
                 </Typography>
               </Box>
             </Grid>
@@ -301,10 +301,10 @@ const FeaturesPage = () => {
                   <LockIcon sx={{ fontSize: 40, color: 'info.main' }} />
                 </Box>
                 <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-                  Secure & Private
+                  Sicher & Privat
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Enterprise-grade security with end-to-end encryption. Your data stays yours, always.
+                  Sicherheit auf Unternehmensniveau mit Ende-zu-Ende-Verschlüsselung. Ihre Daten bleiben immer Ihre.
                 </Typography>
               </Box>
             </Grid>
@@ -316,7 +316,7 @@ const FeaturesPage = () => {
       <Box sx={{ py: 8, backgroundColor: 'background.paper' }} id="integrations">
         <Container maxWidth="lg">
           <Typography variant="h3" align="center" sx={{ mb: 3, fontWeight: 600 }}>
-            Seamless Integrations
+            Nahtlose Integrationen
           </Typography>
           <Typography
             variant="body1"
@@ -324,7 +324,7 @@ const FeaturesPage = () => {
             color="text.secondary"
             sx={{ mb: 6, maxWidth: '600px', mx: 'auto' }}
           >
-            Connect ProcessLink with your favorite tools and workflows. Export your insights wherever you need them.
+            Verbinden Sie ProcessLink mit Ihren bevorzugten Tools und Workflows. Exportieren Sie Ihre Erkenntnisse, wo immer Sie sie benötigen.
           </Typography>
           <Grid container spacing={3} justifyContent="center">
             {integrations.map((integration, index) => (
@@ -375,14 +375,14 @@ const FeaturesPage = () => {
                 fontSize: { xs: '1.75rem', md: '2.25rem' },
               }}
             >
-              Ready to unlock your video intelligence?
+              Bereit, Ihre Video-Intelligenz freizuschalten?
             </Typography>
             <Typography
               variant="h6"
               color="text.secondary"
               sx={{ mb: 5, fontWeight: 400 }}
             >
-              Join thousands of professionals transforming their video content into actionable knowledge.
+              Schließen Sie sich Tausenden von Profis an, die ihre Videoinhalte in verwertbares Wissen verwandeln.
             </Typography>
             <Button
               variant="contained"
@@ -398,7 +398,7 @@ const FeaturesPage = () => {
                 },
               }}
             >
-              Start Your Free Trial
+              Kostenlos testen
             </Button>
           </Box>
         </Container>
