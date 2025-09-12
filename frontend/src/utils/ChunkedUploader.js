@@ -123,28 +123,25 @@ class ChunkedUploader {
       chunk => chunk.status !== 'completed' && !this.uploadedChunks.has(chunk.index)
     );
 
-    let activeUploads = [];
-    let chunkIndex = 0;
+    console.log(`📊 Starting upload of ${pendingChunks.length} chunks`);
 
-    while (chunkIndex < pendingChunks.length || activeUploads.length > 0) {
+    // Simple sequential upload for now to debug the issue
+    for (const chunk of pendingChunks) {
       if (this.isPaused) {
-        await Promise.all(activeUploads);
         const axios = await import('axios');
-        throw new axios.CancelToken.source().token.reason || new Error('Upload paused');
+        throw new Error('Upload paused');
       }
 
-      // Start new uploads up to concurrency limit
-      while (activeUploads.length < this.concurrentUploads && chunkIndex < pendingChunks.length) {
-        const chunk = pendingChunks[chunkIndex++];
-        activeUploads.push(this.uploadChunk(chunk));
-      }
-
-      // Wait for at least one upload to complete
-      if (activeUploads.length > 0) {
-        const completed = await Promise.race(activeUploads);
-        activeUploads = activeUploads.filter(p => p !== completed);
+      try {
+        await this.uploadChunk(chunk);
+        console.log(`✅ Chunk ${chunk.index + 1}/${this.totalChunks} completed`);
+      } catch (error) {
+        console.error(`❌ Chunk ${chunk.index} failed:`, error);
+        throw error;
       }
     }
+    
+    console.log('✅ All chunks uploaded successfully');
   }
 
   /**
